@@ -1,0 +1,19 @@
+from,to,note
+A,A,Same cluster
+B,B,Same cluster
+C,C,Same cluster
+D,D,Same cluster
+E,E,Same cluster
+F,F,Same cluster
+G,G,Same cluster
+H,H,Same cluster
+I,I,Same cluster
+J,J,Same cluster
+B,C,Sprouting top
+B,D,Sprouting left
+B,E,Sprouting right
+A,F,Split top to left
+A,G,Split top to right
+C,H,Sprouting top to right
+E,I,Sprouting right to bottom
+D,J,Sprouting left to back

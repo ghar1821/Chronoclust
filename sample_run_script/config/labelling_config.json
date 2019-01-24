@@ -1,0 +1,33 @@
+{
+    "DIMENSIONALITY_OF_CLUSTER_POINTS": 3,
+    "CLUSTER_RESULT_FILE": "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/result.csv",
+    "DATA_PER_TIMEPOINT": [
+        {   
+            "TIMEPOINT": 0,
+            "CLUSTER_POINTS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D0.csv",
+            "EXPERT_LABELS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/synthetic_dataset/gating_coarse/synthetic_d0.csv"
+        },  
+        {   
+            "TIMEPOINT": 1,
+            "CLUSTER_POINTS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D1.csv",
+            "EXPERT_LABELS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/synthetic_dataset/gating_coarse/synthetic_d1.csv"
+        },  
+        {   
+            "TIMEPOINT": 2,
+            "CLUSTER_POINTS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D2.csv",
+            "EXPERT_LABELS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/synthetic_dataset/gating_coarse/synthetic_d2.csv"
+        },  
+        {   
+            "TIMEPOINT": 3,
+            "CLUSTER_POINTS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D3.csv",
+            "EXPERT_LABELS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/synthetic_dataset/gating_coarse/synthetic_d3.csv"
+        },  
+        {   
+            "TIMEPOINT": 4,
+            "CLUSTER_POINTS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D4.csv",
+            "EXPERT_LABELS_FILE": "/Users/givanna/Documents/phd/chronoclust_public/synthetic_dataset/gating_coarse/synthetic_d4.csv"
+        }
+    ],  
+    "EXPERT_LABELS_CENTROID_FILE": "/Users/givanna/Documents/phd/chronoclust_public/synthetic_dataset/gating_coarse/gating_centroids.csv",
+    "BACKUP_DIR": "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/backup"
+}

@@ -1,0 +1,14 @@
+{
+    "DAYS": [0,1,2,3,4],
+    "CLUSTER_POINTS": [
+        "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D0.csv",
+        "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D1.csv",
+        "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D2.csv",
+        "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D3.csv",
+        "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/cluster_points_D4.csv"
+    ],
+    "OUTPUT_DIR": "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output",
+    "TRANSITION_RULE_FILE": "/Users/givanna/Documents/phd/chronoclust_public/synthetic_dataset/transition_rules_coarse.csv",
+    "SYNTHETIC_DATASET": "True",
+    "CLUSTER_RESULT_FILE": "/Users/givanna/Documents/phd/chronoclust_public/sample_run_script/output/result.csv"
+ }

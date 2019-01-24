@@ -1,0 +1,7 @@
+from,to,note
+A,A,Same cluster
+B,B,Same cluster
+C,C,Same cluster
+D,D,Same cluster
+A,C,Split top to left
+A,D,Split top to right
