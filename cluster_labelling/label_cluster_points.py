@@ -19,7 +19,7 @@ import os
 import textwrap
 
 from shutil import copyfile
-
+from deprecation import deprecated
 from collections import defaultdict
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -152,6 +152,7 @@ def get_cluster_label_mapping_per_day():
         predicted_labels_mapping[day][cluster_id] = row['predicted_label']
 
 
+@deprecated(details='Old slow method. Use process_each_day')
 def process_each_day_old(timepoint):
 
     data = data_per_timepoint[timepoint]

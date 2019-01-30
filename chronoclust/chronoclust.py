@@ -14,11 +14,11 @@ import pickle
 
 from decimal import Decimal, ROUND_HALF_UP
 from collections import defaultdict
-from chronoclust.scaler import Scaler
-from chronoclust.hddstream import HDDStream
-from chronoclust.cluster_tracker import TrackByHistoricalAssociation
-from chronoclust.cluster_tracker import TrackByLineage
-from chronoclust.helper_objects import Cluster
+from .scaler import Scaler
+from .hddstream import HDDStream
+from .cluster_tracker import TrackByHistoricalAssociation
+from .cluster_tracker import TrackByLineage
+from .helper_objects import Cluster
 
 # Make this global so other function can see them as well for saving and loading
 HDDSTREAM_OBJ = 'hddstream'
@@ -262,7 +262,7 @@ def setup_logger(log_dir):
         os.makedirs(log_dir)
 
     # initialise log file
-    logger_filename = '{}/Chronoclust.log'.format(log_dir)
+    logger_filename = '{}/.log'.format(log_dir)
 
     logging.basicConfig(filename=logger_filename, format='%(asctime)s [%(levelname)-8s] %(message)s')
     logger = logging.getLogger()

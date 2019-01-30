@@ -2,7 +2,7 @@
 
 This folder contains some sample script on how to run ChronoClust.
 
-chronoclust_main.py shows an example on how to run ChronoClust and what is needed.
+sample_chronoclust_run_script.py shows an example on how to run ChronoClust and what is needed. Due to import difficulty of python, in order for this script to run, you need to copy it to the main directory containing chronoclust, cluster_evaluator, cluster_labelling, synthetic dataset, and sample_run_script folders.
 
 In order to label and evaluate chronoclust's clustering, you need to run the scripts in cluster_labelling and cluster_evaluator folder.
 
