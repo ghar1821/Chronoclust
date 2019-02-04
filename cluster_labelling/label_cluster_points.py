@@ -13,7 +13,6 @@ Givanna Putri, July 2018.
 import pandas as pd
 import numpy as np
 import argparse
-import multiprocessing as mp
 import json
 import os
 import textwrap
@@ -282,7 +281,6 @@ def backup_duplicated_points(cluster_points_df, cluster_points_filename, dataset
 parse_config_file()
 get_cluster_label_mapping_per_day()
 
-pool = mp.Pool()
 timepoints = list(data_per_timepoint.keys())
 
 for t in timepoints:
