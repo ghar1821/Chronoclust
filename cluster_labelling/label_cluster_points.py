@@ -210,8 +210,12 @@ def process_each_day(timepoint):
     cluster_points_file = data[0]
     cluster_points_filename = cluster_points_file.split('/')[-1]
     cluster_points_df = pd.read_csv(cluster_points_file)
-    cluster_points_df = cluster_points_df.round(1)
+
     true_label_df = pd.read_csv(data[1])
+
+    # Standardising the decimal place
+    cluster_points_df = cluster_points_df.round(1)
+    true_label_df = true_label_df.round(1)
 
     dataset_attributes = list(cluster_points_df)[2: num_dimensions + 2]
 
