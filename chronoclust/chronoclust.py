@@ -261,7 +261,7 @@ def setup_logger(log_dir):
         os.makedirs(log_dir)
 
     # initialise log file
-    logger_filename = '{}/.log'.format(log_dir)
+    logger_filename = '{}/Chronoclust.log'.format(log_dir)
 
     logging.basicConfig(filename=logger_filename, format='%(asctime)s [%(levelname)-8s] %(message)s')
     logger = logging.getLogger()
