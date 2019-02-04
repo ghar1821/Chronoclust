@@ -225,7 +225,6 @@ class HDDStream(object):
             if not trial1 and not trial2:
                 # We create a new outlier cluster for the datapoint.
                 self._create_new_outlier_cluster(datapoint, input_dataset_daystamp)
-            # self.print_progress_bar(row, num_datapoints)
 
         self.logger.info("Finish online microcluster maintenance for timepoint {}".format(input_dataset_daystamp))
         self.logger.info("Online maintenance yield {} pcores and {} outlier".format(

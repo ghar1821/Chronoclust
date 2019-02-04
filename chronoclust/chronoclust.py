@@ -153,8 +153,6 @@ def run(config_xml, input_xml, log_dir, output_dir, gating_file=None, program_st
         result = []
 
         # This will extract all the points that are clustered
-        # The following array is needed because we need to print out the data_autoencoder points in pcore-MCS
-        # that ARE NOT part of any cluster.
         clustered_pcore_id = []
         for cluster in tracker_by_lineage.child_clusters:
             cluster_id = cluster.id
@@ -168,6 +166,7 @@ def run(config_xml, input_xml, log_dir, output_dir, gating_file=None, program_st
                     logger.info("WARNING: Pcore {} does not receive new data_autoencoder points for timepoint {}."
                                 .format(pcore.id, timepoint))
                     continue
+
                 for point in points:
                     result.append([timepoint, cluster_id] + [round(p, 5) for p in point])
 
