@@ -1,5 +1,10 @@
-# Chronoclust
-ChronoClust clustering and tracking algorithm
+# ChronoClust
+
+A clustering algorithm that will perform clustering on each of a time-series of discrete (not a data stream... yet) datasets, and explicitly track the evolution of clusters over time. 
+
+If you use the ChronoClust algorithm, please cite the associated publication:
+
+>ChronoClust: Density-based clustering and cluster tracking in high-dimensional time-series data. Givanna H. Putri, Mark N. Read, Irena Koprinska, Deeksha Singh, Uwe Rohm, Thomas M. Ashhurst, Nick J.C. King. Accepted to Knowledge Based Systems, 2019.
 
 To run the project you will require the following packages for python 3:
 1. pandas
@@ -9,8 +14,6 @@ To run the project you will require the following packages for python 3:
 5. pickle
 6. tqdm
 7. deprecation
-
-Manuscript for ChronoClust is currently under review by Knowledge-Based-System journal.
 
 ## Who do I talk to?
 * Givanna Putri ghar1821@sydney.edu.au
