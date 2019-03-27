@@ -1,0 +1,34 @@
+from,to,note
+Stem_and_progenitors_unactivated,Stem_and_progenitors_activated,
+Stem_and_progenitors_activated,B_cells_unactivated,"common lymphoid progenitors progression, lymphopoiesis"
+Stem_and_progenitors_activated,Eosinophil_unactivated,"common myeloid progenitors progression, monocytopoiesis"
+Stem_and_progenitors_activated,Neutrophil_unactivated,"common myeloid progenitors progression, monocytopoiesis"
+Stem_and_progenitors_activated,Monoblast_unactivated,"common myeloid progenitors progression, monocytopoiesis"
+Stem_and_progenitors_activated,PDC_unactivated,neither myeloid nor lymphoid progenitors progressions. Seem to require special DC progenitors.
+Stem_and_progenitors_activated,T-NK_cells_unactivated,"common lymphoid progenitors progression, lymphopoiesis"
+B_cells_unactivated,B_cells_activated,"common lymphoid progenitors progression, lymphopoiesis"
+Eosinophil_unactivated,Eosinophil_activated,"common myeloid progenitors progression, granulopoiesis"
+Neutrophil_unactivated,Neutrophil_activated,"common myeloid progenitors progression, monocytopoiesis"
+Monoblast_unactivated,Monoblast_activated,"common myeloid progenitors progression, granulopoiesis"
+PDC_unactivated,PDC_activated,neither myeloid nor lymphoid progenitors progressions. Seem to require special DC progenitors.
+T-NK_cells_unactivated,T-NK_cells_activated,"common lymphoid progenitors progression, lymphopoiesis"
+Monoblast_activated,Mature_Ly6C-_monocyte_unactivated,"common myeloid progenitors progression, monocytopoiesis"
+Mature_Ly6C-_monocyte_unactivated,Mature_Ly6C+_monocyte_activated,"common myeloid progenitors progression, monocytopoiesis"
+Stem_and_progenitors_unactivated,Stem_and_progenitors_unactivated,same populations
+B_cells_unactivated,B_cells_unactivated,same populations
+Eosinophil_unactivated,Eosinophil_unactivated,same populations
+Neutrophil_unactivated,Neutrophil_unactivated,same populations
+Monoblast_unactivated,Monoblast_unactivated,same populations
+PDC_unactivated,PDC_unactivated,same populations
+T-NK_cells_unactivated,T-NK_cells_unactivated,same populations
+Mature_Ly6C-_monocyte_unactivated,Mature_Ly6C-_monocyte_unactivated,same populations
+Stem_and_progenitors_activated,Stem_and_progenitors_activated,same populations
+B_cells_activated,B_cells_activated,same populations
+Eosinophil_activated,Eosinophil_activated,same populations
+Neutrophil_activated,Neutrophil_activated,same populations
+Monoblast_activated,Monoblast_activated,same populations
+PDC_activated,PDC_activated,same populations
+T-NK_cells_activated,T-NK_cells_activated,same populations
+Mature_Ly6C+_monocyte_activated,Mature_Ly6C+_monocyte_activated,same populations
+Monoblast_unactivated,Mature_Ly6C-_monocyte_unactivated,plausible according to tom
+Monoblast_unactivated,Mature_Ly6C+_monocyte_activated,plausible according to tom
