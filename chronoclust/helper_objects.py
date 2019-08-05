@@ -125,6 +125,11 @@ class Microcluster(object):
 
         :param cf1: (Cluster Feature 1) weighted linear sum of all points in this Microcluster
                 for each dimension.
+                Don't get confused with the paper definition of f(t) * pij where f(t) is weight of the datapoint at
+                time t when adding new data point. The way we do it is fine because rather than compunding the decay
+                rate based on the arrival time, we just apply it again to the new weight at every time interval.
+                So for instance, CF1 at t0 is 7, at t1 it's decayed to 3.5 by multiplying 7 with 2^-1 assuming lambda is 1.
+                Then at t2, rather than multiplying 7 with 2^-2, we multiply 3.5 by 2^-1 again, yielding same value 1.75.
         :param cf2: (Cluster Feature 2) weighted linear sum of square of all points in this
                 Microcluster for each dimension.
         :param id: id of the Microcluster. Array containing single int for potential and outlier,
@@ -161,18 +166,28 @@ class Microcluster(object):
         Returns:
             None.
         """
-        num_dimensions = self.CF1.shape[0]
+        # we use local variable to speed up the method. Referring to self all the time will add processing time.
+        cf1 = self.CF1
+        cf2 = self.CF2
+        cum_weight = self.cumulative_weight
+
+        num_dimensions = cf1.shape[0]
 
         # initialise the dimension preference vector to 1. Initially assume that each dimension has variance greater
         # than the threshold.
-        self.preferred_dimension_vector = np.ones(num_dimensions)
+        # self.preferred_dimension_vector = np.ones(num_dimensions)
+        # this is the updated preferred dimension vector
+        updated_pref_dim_vector = []
 
         for index in range(num_dimensions):
-            squared_variance = (self.CF2[index] / self.cumulative_weight) - (
-                    (self.CF1[index] / self.cumulative_weight) ** 2)
+            squared_variance = (cf2[index] / cum_weight) - ((cf1[index] / cum_weight) ** 2)
             # only need to change the dimension preference to p_k as the list was initially initialised with 1.
             if squared_variance <= variance_threshold_squared:
-                self.preferred_dimension_vector[index] = k_constant
+                updated_pref_dim_vector.append(k_constant)
+            else:
+                updated_pref_dim_vector.append(1.0)
+
+        self.preferred_dimension_vector = np.array(updated_pref_dim_vector)
 
     def add_new_point(self, new_point_values, new_point_timestamp, new_point_weight=1):
         """
@@ -214,8 +229,10 @@ class Microcluster(object):
             Float: Projected distance between this point and point given as argument.
         """
 
+        centroids = self.cluster_centroids
+        pref_dim_vector = self.preferred_dimension_vector
         dist = 0.0
-        for c_i, p_i, d_i in zip(self.cluster_centroids, other_point, self.preferred_dimension_vector):
+        for c_i, p_i, d_i in zip(centroids, other_point, pref_dim_vector):
             dist += ((p_i - c_i) ** 2) / d_i
         return dist
 
@@ -226,11 +243,16 @@ class Microcluster(object):
         Returns:
             Float: Squared Projected radius.
         """
+        cf1 = self.CF1
+        cf2 = self.CF2
+        pref_dim_vector = self.preferred_dimension_vector
+        cum_weight = self.cumulative_weight
+
         radius_squared = 0.0
-        for i in range(self.CF1.shape[0]):
-            dimension = 1.0 / self.preferred_dimension_vector[i]
-            value = (self.CF2[i] / self.cumulative_weight) - \
-                    ((self.CF1[i] / self.cumulative_weight) ** 2)
+
+        for c1, c2, p_dim in zip(cf1, cf2, pref_dim_vector):
+            dimension = 1.0 / p_dim
+            value = (c2 / cum_weight) - ((c1 / cum_weight) ** 2)
             radius_squared += dimension * value
 
         return radius_squared
@@ -242,8 +264,11 @@ class Microcluster(object):
         Returns:
             Microcluster: A clone of itself.
         """
-        new_cf1 = np.zeros(len(self.CF1)) + self.CF1
-        new_cf2 = np.zeros(len(self.CF2)) + self.CF2
+        cf1 = self.CF1
+        cf2 = self.CF2
+
+        new_cf1 = np.zeros(len(cf1)) + cf1
+        new_cf2 = np.zeros(len(cf2)) + cf2
         return Microcluster(cf1=new_cf1, cf2=new_cf2, cumulative_weight=self.cumulative_weight)
 
     def get_copy_with_new_point(self, datapoint, variance_threshold_squared, k_constant):
@@ -412,7 +437,8 @@ class Cluster(object):
         self.parents.update([id])
 
     def set_parents(self, parent_pcores_to_id):
-        for pcore in self.pcore_ids:
+        pcore_ids = self.pcore_ids
+        for pcore in pcore_ids:
             if pcore in parent_pcores_to_id:
                 self.add_parent(parent_pcores_to_id[pcore])
 
@@ -420,7 +446,9 @@ class Cluster(object):
         return self.parents
 
     def add_pcore_objects(self, pcore_id_to_object):
-        for pcore_id in self.pcore_ids:
+        pcore_ids = self.pcore_ids
+
+        for pcore_id in pcore_ids:
             pcore = pcore_id_to_object[pcore_id]
             pcore_copy = pcore.get_copy()
             pcore_copy.preferred_dimension_vector = np.zeros(
@@ -442,19 +470,22 @@ class Cluster(object):
         self.historical_associates_pcores.update(pcore_id)
 
     def get_historical_associates_as_str(self):
-        return '&'.join(str(s) for s in self.historical_associates)
+        hist_assoc = self.historical_associates
+        return '&'.join(str(s) for s in hist_assoc)
 
     def get_historical_associates_pcore_as_str(self):
-        return '&'.join(str(s) for s in self.historical_associates_pcores)
+        hist_assoc_pcores = self.historical_associates_pcores
+        return '&'.join(str(s) for s in hist_assoc_pcores)
 
     def get_projected_dist_to_point(self, other_point):
         """
         This is exact copy of the microcluster version.
         TODO Merge this with microcluster.
         """
-
+        centroid = self.centroid
+        pref_dim = self.preferred_dimensions
         dist = 0.0
-        for c_i, p_i, d_i in zip(self.centroid, other_point, self.preferred_dimensions):
+        for c_i, p_i, d_i in zip(centroid, other_point, pref_dim):
             dist += ((float(p_i) - float(c_i)) ** 2) / float(d_i)
         return dist
 
@@ -463,7 +494,8 @@ class Cluster(object):
         This is exact copy of the microcluster version.
         TODO Merge this with microcluster.
         """
+        centroid = self.centroid
         dist = 0.0
-        for i, cluster_centroid in enumerate(self.centroid):
+        for i, cluster_centroid in enumerate(centroid):
             dist += ((float(other_point[i]) - float(cluster_centroid)) ** 2)
         return dist

@@ -54,26 +54,36 @@ class PreDeCon(object):
         """
         self._find_weighted_neighbours()
 
-        # For each datapoint, check and update its core_point status. This is only true if we don't use PreDeCon for
-        # offline clustering where datapoint is actually a cluster. In this case, the core status of each datapoint (
-        # cluster) would have been set!
+        # For each datapoint, check and update its core_point status.
+        # This method will only change the core status if used for initialisation,
+        # i.e. if data points are actually data points.
+        # In the case of offline clustering where data points are MCs, the method does nothing.
+        # This is because the core status is already set by online phase. In other words, the core MCs are the seed.
         self._set_is_core_pt()
 
-        for datapt_id, datapoint in self.datapoints.items():
+        datapoints_items = self.datapoints.items()
+        delta_squared = self.delta_squared
+        k = self.k
+
+        for datapt_id, datapoint in datapoints_items:
 
             if datapoint.is_unclassified():
                 if datapoint.is_core_point:
-                    last_cluster = set(range(len(self.clusters), len(self.clusters) + 1))
+                    # last_cluster = set(range(len(self.clusters), len(self.clusters) + 1))
+                    last_cluster = set()
+                    last_cluster.add(len(self.clusters))
                     # Need to do it this way as for offline clustering, the cluster id must be an empty set.
                     new_cluster_id = datapoint.get_new_cluster_id(last_cluster)
-                    new_cluster = Microcluster(cf1=np.zeros(len(datapoint.dimension_values)),
-                                               cf2=np.zeros(len(datapoint.dimension_values)), id=new_cluster_id,
-                                               preferred_dimension_vector=np.ones(len(datapoint.dimension_values)))
+                    datapoint_values = len(datapoint.dimension_values)
+
+                    new_cluster = Microcluster(cf1=np.zeros(datapoint_values),
+                                               cf2=np.zeros(datapoint_values), id=new_cluster_id,
+                                               preferred_dimension_vector=np.ones(datapoint_values))
 
                     # Try to expand the new_cluster with the datapoint
                     self._expand(new_cluster, datapoint)
 
-                    new_cluster.update_preferred_dimensions(self.delta_squared, self.k)
+                    new_cluster.update_preferred_dimensions(delta_squared, k)
 
                     # Sanity check to make sure we do not include empty cluster.
                     if new_cluster.cumulative_weight > 0:
@@ -97,16 +107,16 @@ class PreDeCon(object):
         # a copy of potential_cluster_members because it will be modified. We don't want to modify parameters. This
         # will make a copy as the weighted_neighbour_pts contains ids as int.
         queue = list(datapoint.weighted_neighbour_pts)
-
+        datapoints = self.datapoints
         while len(queue) > 0:
             # q in paper[2]
-            first_datapt = self.datapoints[queue.pop(0)]
+            first_datapt = datapoints[queue.pop(0)]
             # R in paper[2]
-            directly_reachable_pts = self._find_directly_reachable_points(first_datapt, list(self.datapoints.keys()))
+            directly_reachable_pts = self._find_directly_reachable_points(first_datapt, list(datapoints.keys()))
 
             for dir_reachable_pt_id in directly_reachable_pts:
                 # x in paper[2] figure 4.
-                x = self.datapoints[dir_reachable_pt_id]
+                x = datapoints[dir_reachable_pt_id]
 
                 # line 10-14 of figure 4 in paper[2]
                 if x.is_unclassified():
@@ -122,9 +132,12 @@ class PreDeCon(object):
         Returns:
             None.
         """
-        for datapt_id, datapt in self.datapoints.items():
-            datapt.set_is_core_point(self.lambbda,
-                                     self.mu)
+        datapoints_items = self.datapoints.items()
+        lambbda = self.lambbda
+        mu = self.mu
+
+        for datapt_id, datapt in datapoints_items:
+            datapt.set_is_core_point(lambbda, mu)
 
     def _find_weighted_neighbours(self):
         """
@@ -135,16 +148,20 @@ class PreDeCon(object):
         Returns:
             None.
         """
-        for datapt_id, datapt in self.datapoints.items():
+        datapoints = self.datapoints
+        datapoints_items = datapoints.items()
+        epsilon_squared = self.epsilon_squared
+
+        for datapt_id, datapt in datapoints_items:
             # Find all the neighbour points and calculate the subspace preference vector
             datapt.neighbour_pts = self._find_neighbour_points(datapt)
             datapt.subspace_preference_vector = self._calculate_subspace_preference_vector(datapt)
 
         # This MUST be done after the preference vectors for all points must have been calculated.
-        for datapt_id, datapt in self.datapoints.items():
+        for datapt_id, datapt in datapoints_items:
             for neighbour_pt_id in datapt.neighbour_pts:
-                dist = self._calculate_general_weighted_dist_squared(datapt, self.datapoints[neighbour_pt_id])
-                if dist <= self.epsilon_squared:
+                dist = self._calculate_general_weighted_dist_squared(datapt, datapoints[neighbour_pt_id])
+                if dist <= epsilon_squared:
                     datapt.weighted_neighbour_pts.append(neighbour_pt_id)
 
     def _find_neighbour_points(self, point):
@@ -159,11 +176,14 @@ class PreDeCon(object):
         """
         neighbour_points_id = []
 
-        for datapt_id, datapt in self.datapoints.items():
+        datapoints_items = self.datapoints.items()
+        epsilon = self.epsilon
+
+        for datapt_id, datapt in datapoints_items:
             euclidean_dist = self._calculate_euclidean_dist(datapt.dimension_values, point.dimension_values)
 
             # See beginning of chapter 3 of paper[2] for neighbourhood points criteria
-            if euclidean_dist <= self.epsilon:
+            if euclidean_dist <= epsilon:
                 neighbour_points_id.append(datapt_id)
 
         return neighbour_points_id
@@ -192,11 +212,13 @@ class PreDeCon(object):
         Returns:
             Array: Subspace preference vector represented by an array.
         """
+        delta = self.delta
+        k = self.k
         subspace_preference_vector = []
         for dimension in range(self.dataset_dimensionality):
             variance = self._calculate_variance_along_dimension(point, dimension)
-            if variance <= self.delta:
-                subspace_preference_vector.append(self.k)
+            if variance <= delta:
+                subspace_preference_vector.append(k)
             else:
                 subspace_preference_vector.append(1)
         return subspace_preference_vector
@@ -213,9 +235,12 @@ class PreDeCon(object):
         Returns:
             Float: Variance of neighbourhood of a point along a dimension
         """
+        datapoints = self.datapoints
+
         result = 0.0
+
         for i in point.neighbour_pts:
-            result += (point.dimension_values[dimension] - self.datapoints[i].dimension_values[dimension]) ** 2
+            result += (point.dimension_values[dimension] - datapoints[i].dimension_values[dimension]) ** 2
         return result / len(point.neighbour_pts)
 
     def _calculate_general_weighted_dist_squared(self, p, q):
@@ -263,10 +288,13 @@ class PreDeCon(object):
         Returns:
             List: List of directly reachable points
         """
+        datapoints = self.datapoints
+        lambbda = self.lambbda
+
         dir_reachable_pts = []
         for datapt_id in potential_directly_reachable_points:
             point_is_core = point.is_core_point
-            pdim_datapt_less_than_threshold = self.datapoints[datapt_id].get_pdim() <= self.lambbda
+            pdim_datapt_less_than_threshold = datapoints[datapt_id].get_pdim() <= lambbda
             datapt_is_neighbour_of_point = datapt_id in point.weighted_neighbour_pts
 
             if point_is_core and pdim_datapt_less_than_threshold and datapt_is_neighbour_of_point:
