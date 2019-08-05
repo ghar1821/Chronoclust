@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='chronoclust',
     version='0.1',
-    packages=[''],
+    packages=['chronoclust'],
     url='https://ghar1821.github.io/Chronoclust/',
     license='GPL-3.0',
     author='Givanna Putri',
