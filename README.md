@@ -42,5 +42,8 @@ chronoclust.run(config_file, in_file, basedir, basedir)
 ```
 In the above script, the input and config files are stored in **/Users/example/Documents/workdir** and the clustering result will also be written into the same directory. You can store the config/input files in different directories (doesn't matter). 
 
-## Who do I talk to?
-* Givanna Putri ghar1821@uni.sydney.edu.au
+## Data files
+The synthetic dataset and corresponding gating is available under ``synthetic_dataset`` folder.
+
+The WNV dataset and gating are available from FlowRepository [repository FR-FCM-Z27P](https://flowrepository.org/id/FR-FCM-Z27P)
+
