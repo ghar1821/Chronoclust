@@ -4,7 +4,7 @@ A clustering algorithm that will perform clustering on each of a time-series of 
 
 If you use the ChronoClust algorithm, please cite the associated publication:
 
->ChronoClust: Density-based clustering and cluster tracking in high-dimensional time-series data. Givanna H. Putri, Mark N. Read, Irena Koprinska, Deeksha Singh, Uwe Rohm, Thomas M. Ashhurst, Nick J.C. King. Accepted to Knowledge Based Systems, 2019.
+>Putri, Givanna H., Mark N. Read, Irena Koprinska, Deeksha Singh, Uwe Röhm, Thomas M. Ashhurst, and Nicholas JC King. "ChronoClust: Density-based clustering and cluster tracking in high-dimensional time-series data." Knowledge-Based Systems 174 (2019): 9-26
 
 DOI: https://doi.org/10.1016/j.knosys.2019.02.018
 
@@ -42,8 +42,23 @@ chronoclust.run(config_file, in_file, basedir, basedir)
 ```
 In the above script, the input and config files are stored in **/Users/example/Documents/workdir** and the clustering result will also be written into the same directory. You can store the config/input files in different directories (doesn't matter). 
 
+## Where to start with the parameters?
+You can pretty much start with any value for any parameters, but to at least get some kind of clustering, I recommend you start with setting ``pi`` to be the dimensionality of your dataset (number of columns or markers in the dataset).
+This gives Chronoclust the flexibility in creating the Microclusters.
+
+Once you have some kind of clustering going, then you can start playing around with others. 
+I will generally start by looking at the number of clusters produced and tuning ``epsilon``.
+If there are too many clusters (overclustering), I'll tune ``epsilon`` down (make it smaller).
+Otherwise, make it a bit bigger.
+**Do note that a small reduction/increment in ``epsilon`` can dramatically alter the clustering produced.**
+After it looks sort of right, then you can move on to ``beta``, ``mu``, and/or ``upsilon``.
+
+If you find that the clusters are too wide or big (has too big of a reach), then it could very well be that you have set the requirement for the MCs to be too _lenient_, i.e. the parameter combination allows small MCs to be formed and included in the final clustering.
+What you can do here is make ``beta`` and ``mu`` bigger so small MCs are treated as outliers and not included in final clustering.
+You can also make ``upsilon`` smaller, which will split your big wide cluster into few smaller ones. 
+
 ## Data files
 The synthetic dataset and corresponding gating is available under ``synthetic_dataset`` folder.
 
-The WNV dataset and gating are available from FlowRepository [repository FR-FCM-Z27P](https://flowrepository.org/id/FR-FCM-Z27P)
+The WNV dataset and gating are available from FlowRepository [repository FR-FCM-Z285](https://flowrepository.org/id/FR-FCM-Z285).
 
