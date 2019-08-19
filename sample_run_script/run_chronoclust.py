@@ -1,10 +1,11 @@
 """
 A sample script on how to run ChronoClust from another python script.
-
+Please note that the argument gating_file is OPTIONAL. Only provide this if you have a labelled/gated dataset and want to see how effective chronoclust is.
+The file must contain the "centroid" of each of your cluster / population.
+Have a look at the synthetic_dataset/gating_fine/gating_centroids.csv for example
 """
-import sys
 
-from chronoclust import chronoclust
+import chronoclust
 
 
 config_xml = 'sample_run_script/config/config.xml'

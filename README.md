@@ -31,7 +31,8 @@ Have a look at sample_run_script/config/input.xml for an example.
 Thirdly, you need to define the config Chronoclust will be run with. Define the configs in a xml file.
 Look at sample_run_script/config/config.xml for an example, and the published article linked above for information on what parameters are there and how are they used in Chronoclust.
 
-Afterwards, you need to just import chronoclust, and run it like below.
+### Running Chronoclust in Python
+After setting everything up, all you need to is just import chronoclust, and run it like below.
 ```
 import chronoclust
 
@@ -41,6 +42,15 @@ config_file = basedir + '/config.xml'
 chronoclust.run(config_file, in_file, basedir, basedir)
 ```
 In the above script, the input and config files are stored in **/Users/example/Documents/workdir** and the clustering result will also be written into the same directory. You can store the config/input files in different directories (doesn't matter). 
+
+If you have a _gated_ or _labelled_ data and want to see how effective Chronoclust is, you can pass a ``gating_file`` argument to the run command above and supply it with a csv file containing the centroid of each population or cluster. 
+Please look at ``sample_run_script/run_chronoclust.py`` for example.
+
+### Running Chronoclust in R
+Well, Chronoclust is not written in R but thanks to the fabulous people who write [reticulate](https://rstudio.github.io/reticulate/) package, it is now posisble to run Python code in R.
+
+You still need to download Chronoclust API from Anaconda or Pypi and setup the xml files.
+Thereafter, have a look at ``sample_run_script/run_chronoclust.R`` for example on how to run Chronoclust in R.
 
 ## Where to start with the parameters?
 You can pretty much start with any value for any parameters, but to at least get some kind of clustering, I recommend you start with setting ``pi`` to be the dimensionality of your dataset (number of columns or markers in the dataset).
