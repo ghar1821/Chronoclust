@@ -1,6 +1,6 @@
 # ChronoClust
 
-A clustering algorithm that will perform clustering on each of a time-series of discrete (not a data stream... yet) datasets, and explicitly track the evolution of clusters over time. 
+A clustering algorithm that will perform clustering on each of a time-series of discrete (not a data stream... yet) datasets, and explicitly track the evolution of clusters over time.
 
 If you use the ChronoClust algorithm, please cite the associated publication:
 
@@ -24,7 +24,7 @@ Chronoclust is available on:
 
 Download them or just use the stable source code here: https://github.com/ghar1821/Chronoclust/releases
 
-Secondly, you need to have a bunch of data (doh!), and create a xml file containing the location of the data files. The files have to be in csv format compressed as gzip (extension csv.gz). 
+Secondly, you need to have a bunch of data (doh!), and create a xml file containing the location of the data files. The files have to be in csv format compressed as gzip (extension csv.gz).
 Each file need to be associated with a time point - day 1, 2, 3 etc.
 Have a look at sample_run_script/config/input.xml for an example.
 
@@ -41,9 +41,9 @@ in_file = basedir + '/input.xml'
 config_file = basedir + '/config.xml'
 chronoclust.run(config_file, in_file, basedir, basedir)
 ```
-In the above script, the input and config files are stored in **/Users/example/Documents/workdir** and the clustering result will also be written into the same directory. You can store the config/input files in different directories (doesn't matter). 
+In the above script, the input and config files are stored in **/Users/example/Documents/workdir** and the clustering result will also be written into the same directory. You can store the config/input files in different directories (doesn't matter).
 
-If you have a _gated_ or _labelled_ data and want to see how effective Chronoclust is, you can pass a ``gating_file`` argument to the run command above and supply it with a csv file containing the centroid of each population or cluster. 
+If you have a _gated_ or _labelled_ data and want to see how effective Chronoclust is, you can pass a ``gating_file`` argument to the run command above and supply it with a csv file containing the centroid of each population or cluster.
 Please look at ``sample_run_script/run_chronoclust.py`` for example.
 
 ### Running Chronoclust in R
@@ -56,7 +56,7 @@ Thereafter, have a look at ``sample_run_script/run_chronoclust.R`` for example o
 You can pretty much start with any value for any parameters, but to at least get some kind of clustering, I recommend you start with setting ``pi`` to be the dimensionality of your dataset (number of columns or markers in the dataset).
 This gives Chronoclust the flexibility in creating the Microclusters.
 
-Once you have some kind of clustering going, then you can start playing around with others. 
+Once you have some kind of clustering going, then you can start playing around with others.
 I will generally start by looking at the number of clusters produced and tuning ``epsilon``.
 If there are too many clusters (overclustering), I'll tune ``epsilon`` down (make it smaller).
 Otherwise, make it a bit bigger.
@@ -65,10 +65,26 @@ After it looks sort of right, then you can move on to ``beta``, ``mu``, and/or `
 
 If you find that the clusters are too wide or big (has too big of a reach), then it could very well be that you have set the requirement for the MCs to be too _lenient_, i.e. the parameter combination allows small MCs to be formed and included in the final clustering.
 What you can do here is make ``beta`` and ``mu`` bigger so small MCs are treated as outliers and not included in final clustering.
-You can also make ``upsilon`` smaller, which will split your big wide cluster into few smaller ones. 
+You can also make ``upsilon`` smaller, which will split your big wide cluster into few smaller ones.
 
 ## Data files
 The synthetic dataset and corresponding gating is available under ``synthetic_dataset`` folder.
 
 The WNV dataset and gating are available from FlowRepository [repository FR-FCM-Z285](https://flowrepository.org/id/FR-FCM-Z285).
 
+## Providing gated files for ChronoClust
+For the clustering result to be meaningful, there must be some sort of labelling attached to each cluster produced by ChronoClust.
+You can do this by manually annotating either the result file or the file containing the points belonging to each cluster.
+However, there are times (such as when we prepare the result for our paper) when a ``ground truth`` is already available.
+In this case, you can automatically get ChronoClust to label the clusters based on the ground truth label.
+
+To do this, you need to first find the centroid of each ``cell population`` or grouping in your ground truth.
+This can easily be done by just taking the mean of the data points for each population/grouping.
+You can either do this yourself or just use the script in ``cluster_labelling/calculate_gating_centroid.py`` (this is the script we used for our paper).
+It shall produce the file similar to the gating centroid found in synthetic dataset (``synthetic_dataset/gating_fine/gating_centroids.csv``) or the WNV dataset.
+Thereafter, you need to pass this file (just the location) to ChronoClust as ``gating_file`` parameter.
+ChronoClust will then attempt to match each cluster to the nearest population/grouping.
+For more information on how it does this, please download the paper.
+
+If you do this, the result file will have an extra column call ``predicted_label``, the cluster label based on supplied ground truth.
+Only after you have this then you can label each data points in ``cluster_points`` file (generated by ChronoClust) with their predicted label (based on ``predicted_label`` above) and true label (given by ground truth).
