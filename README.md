@@ -82,6 +82,8 @@ To do this, you need to first find the centroid of each ``cell population`` or g
 This can easily be done by just taking the mean of the data points for each population/grouping.
 You can either do this yourself or just use the script in ``cluster_labelling/calculate_gating_centroid.py`` (this is the script we used for our paper).
 It shall produce the file similar to the gating centroid found in synthetic dataset (``synthetic_dataset/gating_fine/gating_centroids.csv``) or the WNV dataset.
+Please note that if you want to do this, make sure you format your ground truth data in similar format as ours (label is named ``PopName`` at least).
+Consult ``synthetic_dataset/gating_fine/synthetic_d0.csv`` for example.
 Thereafter, you need to pass this file (just the location) to ChronoClust as ``gating_file`` parameter.
 ChronoClust will then attempt to match each cluster to the nearest population/grouping.
 For more information on how it does this, please download the paper.
