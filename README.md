@@ -13,9 +13,8 @@ To run the project you will require the following packages for python 3:
 2. numpy
 3. scipy
 4. scikit-learn
-5. pickle
-6. tqdm
-7. numba
+5. tqdm
+6. numba
 
 ## How do I use chronoclust?
 Chronoclust is available on:
