@@ -15,7 +15,7 @@ To run the project you will require the following packages for python 3:
 4. scikit-learn
 5. pickle
 6. tqdm
-7. deprecation
+7. numba
 
 ## How do I use chronoclust?
 Chronoclust is available on:

@@ -1,0 +1,22 @@
+<input>
+    <file>
+        <timepoint>0</timepoint>
+        <filename>{codedir}/test_files/dataset/{dataset_subdir}/synthetic_d0.csv.gz</filename>
+    </file>
+    <file>
+        <timepoint>1</timepoint>
+        <filename>{codedir}/test_files/dataset/{dataset_subdir}/synthetic_d1.csv.gz</filename>
+    </file>
+    <file>
+        <timepoint>2</timepoint>
+        <filename>{codedir}/test_files/dataset/{dataset_subdir}/synthetic_d2.csv.gz</filename>
+    </file>
+    <file>
+        <timepoint>3</timepoint>
+        <filename>{codedir}/test_files/dataset/{dataset_subdir}/synthetic_d3.csv.gz</filename>
+    </file>
+    <file>
+        <timepoint>4</timepoint>
+        <filename>{codedir}/test_files/dataset/{dataset_subdir}/synthetic_d4.csv.gz</filename>
+    </file>
+</input>

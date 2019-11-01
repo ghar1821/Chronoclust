@@ -21,9 +21,9 @@ import logging
 import io
 
 from tqdm import tqdm
-from .predecon import PreDeCon
-from .helper_objects import Microcluster
-from .helper_objects import MicroclusterAsDatapoint
+from clustering.predecon import PreDeCon
+from objects.microcluster import Microcluster
+from objects.predecon_mc import PredeconMC
 
 
 class HDDStream(object):
@@ -218,18 +218,18 @@ class HDDStream(object):
 
             # trial1 contains boolean that indicates whether the point has successfully been added to a potential
             # microcluster. See Figure 1 in paper[1].
-            trial1 = self._add_to_pcore(datapoint, input_dataset_daystamp)
+            trial1 = self._add_to_pcore(datapoint, input_dataset_daystamp, row)
             trial2 = False
 
             if not trial1:
                 # code will get here if the point cannot be added to any potential microcluster. In this case we'll
                 # see if we can add it to an outlier microcluster
-                trial2 = self._add_to_outlier(datapoint, input_dataset_daystamp)
+                trial2 = self._add_to_outlier(datapoint, input_dataset_daystamp, row)
 
             # No need to check if trial2 is none as it won't even get there if trial1 is true.
             if not trial1 and not trial2:
                 # We create a new outlier cluster for the datapoint.
-                self._create_new_outlier_cluster(datapoint, input_dataset_daystamp)
+                self._create_new_outlier_cluster(datapoint, input_dataset_daystamp, row)
 
         logger.info("Finish online microcluster maintenance for timepoint {}".format(input_dataset_daystamp))
         logger.info("Online maintenance yield {} pcores and {} outlier".format(
@@ -280,12 +280,14 @@ class HDDStream(object):
         microcluster.CF2 *= decay_factor
         microcluster.cumulative_weight *= decay_factor
 
-    def _add_to_pcore(self, datapoint, datapoint_timestamp):
+    def _add_to_pcore(self, datapoint, datapoint_timestamp, datapoint_idx):
         """
         Add point (datapoint) to a pcore microcluster.
         Args:
             datapoint (numpy.array): A point represented as an array of values, each containing the point's value for a
                 dimension.
+            datapoint_timestamp (int): The timepoint the datapoint is meant for.
+            datapoint_idx (int): The index (or so called id) of the data point.
 
         Returns:
             bool: False if addition failed i.e. some conditions are not met, True if addition was performed.
@@ -329,13 +331,13 @@ class HDDStream(object):
 
             if projected_radius_squared <= epsilon_squared:
 
-                # TODO: check if referring to local variable affect the actual self as well. If not then revert to self.
-                pcore_MCs[closest_cluster_index].add_new_point(datapoint, datapoint_timestamp)
+                # TODO: should the update preferred dimension done by add new point?
+                pcore_MCs[closest_cluster_index].add_new_point(datapoint, datapoint_timestamp, datapoint_idx)
                 pcore_MCs[closest_cluster_index].update_preferred_dimensions(delta_squared, k)
                 return True
         return False
 
-    def _add_to_outlier(self, datapoint, datapoint_timestamp):
+    def _add_to_outlier(self, datapoint, datapoint_timestamp, datapoint_idx):
         """
         Add a datapoint to outlier microcluster. This can be improved by consolidating it with the add to pcore
         since it's so similar.
@@ -346,6 +348,8 @@ class HDDStream(object):
         Args:
             datapoint (numpy.array): A point represented as an array of values, each containing a point's value for a
                 dimension.
+            datapoint_timestamp (int): The timepoint the datapoint is meant for.
+            datapoint_idx (int): The index (or so called id) of the data point.
 
         Returns:
             bool: False if addition failed i.e. some conditions are not met, True if addition was performed.
@@ -375,8 +379,8 @@ class HDDStream(object):
             projected_radius_squared = tmp_outlier_mc.calculate_projected_radius_squared()
 
             if projected_radius_squared <= epsilon_squared:
-                # TODO: check if referring to local variable affect the actual self as well. If not then revert to self.
-                outlier_MCs[closest_cluster_index].add_new_point(datapoint, datapoint_timestamp)
+                # TODO: should the update preferred dimension done by add new point?
+                outlier_MCs[closest_cluster_index].add_new_point(datapoint, datapoint_timestamp, datapoint_idx)
                 outlier_MCs[closest_cluster_index].update_preferred_dimensions(delta_squared, k)
 
                 # From here on, we then check whether the outlier microcluster can be upgraded to pcore microcluster.
@@ -408,41 +412,36 @@ class HDDStream(object):
         pdim_threshold_obeyed = np.array(outlier_mc.preferred_dimension_vector > 1).sum() <= pi
 
         if weight_threshold_obeyed and pdim_threshold_obeyed:
-            # TODO: remove if it doesn't break the code
-            # num_pcore_MCs = len(pcore_MCs)
-            # outlier_mc.id = list(range(num_pcore_MCs, num_pcore_MCs + 1))
 
             outlier_mc.id = [len(pcore_MCs)]
             self.outlier_MC.remove(outlier_mc)
-            # TODO: check if referring to local variable affect the actual self as well. If not then revert to self.
             pcore_MCs.append(outlier_mc)
 
-    def _create_new_outlier_cluster(self, datapoint, creation_time):
+    def _create_new_outlier_cluster(self, datapoint, creation_time, datapoint_idx):
         """
         Create a new outlier microcluster for a datapoint and add it to the outlier microcluster list.
 
         Args:
             datapoint (numpy.array): A point represented as an array of values, each containing a point's value for a
                 dimension.
+            datapoint_idx (int): The index (or so called id) of the data point.
             creation_time (int): Time when the cluster is created.
 
         Returns:
             None.
         """
         outlier_MCs = self.outlier_MC
-        # TODO: remove if new code doesn't break
-        # num_outlier_MCs = len(self.outlier_MC)
-        # outlier_mc_id = set(range(num_outlier_MCs, num_outlier_MCs + 1))
+
         outlier_mc_id = set()
         outlier_mc_id.add(len(outlier_MCs))
 
         num_datapoints = len(datapoint)
         outlier_mc = Microcluster(cf1=np.zeros(num_datapoints), cf2=np.zeros(num_datapoints), id=outlier_mc_id,
                                   creation_time_in_hrs=creation_time)
-        outlier_mc.add_new_point(datapoint, creation_time)
+        # TODO: should the update preferred dimension done by add new point?
+        outlier_mc.add_new_point(datapoint, creation_time, datapoint_idx)
         outlier_mc.update_preferred_dimensions(self.delta_squared, self.k)
 
-        # TODO: check if referring to local variable affect the actual self as well. If not then revert to self.
         outlier_MCs.append(outlier_mc)
 
     def offline_clustering(self, dataset_daystamp):
@@ -466,18 +465,17 @@ class HDDStream(object):
 
         for cluster in pcore_MCs:
 
-            # For offline clustering, the core status of each cluster is determined by the cluster itself rather than
-            #  by PreDeCon.
+            # For offline clustering, the core status of each cluster is determined by the cluster itself rather than by PreDeCon.
             cluster_id = next(iter(cluster.id))
 
             cluster_is_core = cluster.is_core(epsilon_squared, mu, pi)
             if cluster_is_core:
                 num_core += 1
 
-            datapoints[cluster_id] = MicroclusterAsDatapoint(datapoint_dimension_values=cluster.cluster_centroids,
-                                                             datapoint_id=cluster_id, is_core_cluster=cluster_is_core,
-                                                             cluster_CF1=cluster.CF1, cluster_CF2=cluster.CF2,
-                                                             cluster_cumulative_weight=cluster.cumulative_weight)
+            datapoints[cluster_id] = PredeconMC(centroid=cluster.cluster_centroids,
+                                        id=cluster_id, is_core_cluster=cluster_is_core,
+                                        cluster_CF1=cluster.CF1, cluster_CF2=cluster.CF2,
+                                        cluster_cumulative_weight=cluster.cumulative_weight)
         num_pcore = len(pcore_MCs) - num_core
         logger.info(f'Starting offline clustering with {num_core} core clusters and {num_pcore} pcore clusters.')
 

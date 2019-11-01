@@ -7,7 +7,9 @@ The paper will be referred as paper[2].
 """
 import numpy as np
 
-from .helper_objects import Microcluster
+# from objects.microcluster import Microcluster
+from objects.predecon_mc import PredeconMC
+from utilities import predeconmc_functions as predfunc
 
 __author__ = "Givanna Putri, Deeksha Singh, Mark Read, and Tao Tang"
 __copyright__ = "Copyright 2017, Cytoclust Project"
@@ -48,18 +50,11 @@ class PreDeCon(object):
     def run(self):
         """
         Method to run PreDeCon.
-        
+
         Returns:
             None.
         """
         self._find_weighted_neighbours()
-
-        # For each datapoint, check and update its core_point status.
-        # This method will only change the core status if used for initialisation,
-        # i.e. if data points are actually data points.
-        # In the case of offline clustering where data points are MCs, the method does nothing.
-        # This is because the core status is already set by online phase. In other words, the core MCs are the seed.
-        self._set_is_core_pt()
 
         datapoints_items = self.datapoints.items()
         delta_squared = self.delta_squared
@@ -68,17 +63,17 @@ class PreDeCon(object):
         for datapt_id, datapoint in datapoints_items:
 
             if datapoint.is_unclassified():
-                if datapoint.is_core_point:
-                    # last_cluster = set(range(len(self.clusters), len(self.clusters) + 1))
-                    last_cluster = set()
-                    last_cluster.add(len(self.clusters))
-                    # Need to do it this way as for offline clustering, the cluster id must be an empty set.
-                    new_cluster_id = datapoint.get_new_cluster_id(last_cluster)
-                    datapoint_values = len(datapoint.dimension_values)
+                if datapoint.is_core():
 
-                    new_cluster = Microcluster(cf1=np.zeros(datapoint_values),
-                                               cf2=np.zeros(datapoint_values), id=new_cluster_id,
-                                               preferred_dimension_vector=np.ones(datapoint_values))
+                    # Need to do it this way as for offline clustering, the cluster id must be an empty set.
+                    new_cluster_id = set()
+                    datapoint_values = len(datapoint.get_centroid())
+
+                    new_cluster = PredeconMC(cluster_CF1=np.zeros(datapoint_values),
+                                               cluster_CF2=np.zeros(datapoint_values), id=new_cluster_id,
+                                               centroid=np.zeros(datapoint_values),
+                                               is_core_cluster=False,
+                                               cluster_cumulative_weight=0)
 
                     # Try to expand the new_cluster with the datapoint
                     self._expand(new_cluster, datapoint)
@@ -95,7 +90,7 @@ class PreDeCon(object):
     def _expand(self, cluster, datapoint):
         """
         Expand the cluster if possible. See Figure 4 line 6-14 in paper[2]
-        
+
         Args:
             cluster (:obj:Microcluster): Cluster to be expanded
             datapoint (:obj:Datapoint): Datapoint to expand the cluster with.
@@ -123,7 +118,7 @@ class PreDeCon(object):
                     queue.append(dir_reachable_pt_id)
                 if x.is_unclassified() or x.is_noise():
                     x.set_classified()
-                    x.add_to_cluster(cluster)
+                    x.merge_mc(cluster)
 
     def _set_is_core_pt(self):
         """
@@ -137,14 +132,14 @@ class PreDeCon(object):
         mu = self.mu
 
         for datapt_id, datapt in datapoints_items:
-            datapt.set_is_core_point(lambbda, mu)
+            datapt.set_is_core()(lambbda, mu)
 
     def _find_weighted_neighbours(self):
         """
         Method to find and set each datapoint's weighted neighbours. Done by first finding normal neighbours and
         calculating subspace preference vector for ALL datapoints.
         Then start calculating weighted neighbours based on those 2 information.
-        
+
         Returns:
             None.
         """
@@ -179,8 +174,13 @@ class PreDeCon(object):
         datapoints_items = self.datapoints.items()
         epsilon = self.epsilon
 
+        pt_centroid = np.array(point.get_centroid(), dtype='float')
+
         for datapt_id, datapt in datapoints_items:
-            euclidean_dist = self._calculate_euclidean_dist(datapt.dimension_values, point.dimension_values)
+            # euclidean_dist = self._calculate_euclidean_dist(datapt.get_centroid(), point.get_centroid())
+            dtpt_centroid = np.array(datapt.get_centroid(), dtype='float')
+
+            euclidean_dist = predfunc.calculate_euclidean_dist(dtpt_centroid, pt_centroid)
 
             # See beginning of chapter 3 of paper[2] for neighbourhood points criteria
             if euclidean_dist <= epsilon:
@@ -188,60 +188,34 @@ class PreDeCon(object):
 
         return neighbour_points_id
 
-    @staticmethod
-    def _calculate_euclidean_dist(a, b):
+    def _calculate_subspace_preference_vector(self, mc):
         """
-        Calculate Euclidean distance between two points.
+        Calculate the subspace preference vector of a mc (w_p in paper[2]). Refer to definition 3 of paper[2]
 
         Args:
-            a (numpy.array): point 1.
-            b (numpy.array): point 2.
-
-        Returns:
-            Float: Euclidean Distance between 2 points.
-        """
-        return np.linalg.norm(np.asarray(a) - np.asarray(b))
-
-    def _calculate_subspace_preference_vector(self, point):
-        """
-        Calculate the subspace preference vector of a point (w_p in paper[2]). Refer to definition 3 of paper[2]
-
-        Args:
-            point (:obj:Datapoint): PreDeConDatapoint whose subspace preference vector is to be found
+            mc (PredeconMC): PredeconMC whose subspace preference vector is to be found
 
         Returns:
             Array: Subspace preference vector represented by an array.
         """
         delta = self.delta
         k = self.k
+        all_mcs = self.datapoints
+
+        # get the centroid of the mc of interest and its neighbours
+        mc_centroid = mc.get_centroid()
+        neighbours = [all_mcs[p].get_centroid() for p in mc.neighbour_pts]
+
         subspace_preference_vector = []
-        for dimension in range(self.dataset_dimensionality):
-            variance = self._calculate_variance_along_dimension(point, dimension)
+        for dim in range(len(mc_centroid)):
+            mc_centroid_dim = np.array(mc_centroid[dim])
+            neighbour = np.array([n[dim] for n in neighbours])
+            variance = predfunc.calculate_variance_along_dimension(mc_centroid_dim, neighbour)
             if variance <= delta:
                 subspace_preference_vector.append(k)
             else:
                 subspace_preference_vector.append(1)
         return subspace_preference_vector
-
-    def _calculate_variance_along_dimension(self, point, dimension):
-        """
-        Calculate the variance of a point's neighbourhood points along a dimension.
-        See Definition 1 in paper[2].
-
-        Args:
-            point (:obj:Datapoint): Current datapoint whose neighbourhood points' variance is to be calculated.
-            dimension (int): Current dimension whose variance to be calculated
-
-        Returns:
-            Float: Variance of neighbourhood of a point along a dimension
-        """
-        datapoints = self.datapoints
-
-        result = 0.0
-
-        for i in point.neighbour_pts:
-            result += (point.dimension_values[dimension] - datapoints[i].dimension_values[dimension]) ** 2
-        return result / len(point.neighbour_pts)
 
     def _calculate_general_weighted_dist_squared(self, p, q):
         """
@@ -255,24 +229,16 @@ class PreDeCon(object):
         Returns:
             Float: Squared weighted distance.
         """
-        return max(self._calculate_weighted_dist_squared(p, q),
-                   self._calculate_weighted_dist_squared(q, p))
+        p_centroid = np.array(p.get_centroid())
+        q_centroid = np.array(q.get_centroid())
+        p_pref_vect = np.array(p.subspace_preference_vector)
+        q_pref_vect = np.array(q.subspace_preference_vector)
 
-    def _calculate_weighted_dist_squared(self, p, q):
-        """
-        Calculate the weighted distance between 2 points (dist_p in paper[2]). See definition 3 in paper[2]
+        dist_p_q = predfunc.calculate_weighted_dist_squared(p_pref_vect, p_centroid, q_centroid)
+        dist_q_p = predfunc.calculate_weighted_dist_squared(q_pref_vect, q_centroid, p_centroid)
 
-        Args:
-            p (:obj:Datapoint): Point 1.
-            q (:obj:Datapoint): Point 2.
+        return(max(dist_p_q, dist_q_p))
 
-        Returns:
-            Float: Weighted distance between 2 points
-        """
-        sum = 0.0
-        for i in range(self.dataset_dimensionality):
-            sum += p.subspace_preference_vector[i] * (p.dimension_values[i] - q.dimension_values[i]) ** 2
-        return sum
 
     def _find_directly_reachable_points(self, point, potential_directly_reachable_points):
         """
@@ -293,7 +259,7 @@ class PreDeCon(object):
 
         dir_reachable_pts = []
         for datapt_id in potential_directly_reachable_points:
-            point_is_core = point.is_core_point
+            point_is_core = point.is_core()
             pdim_datapt_less_than_threshold = datapoints[datapt_id].get_pdim() <= lambbda
             datapt_is_neighbour_of_point = datapt_id in point.weighted_neighbour_pts
 
