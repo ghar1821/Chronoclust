@@ -17,12 +17,12 @@ from decimal import Decimal, ROUND_HALF_UP
 from collections import defaultdict
 
 # chronoclust specific packages import
-from clustering.hddstream import HDDStream
-from tracking.cluster_tracker import TrackByHistoricalAssociation
-from tracking.cluster_tracker import TrackByLineage
-from objects.cluster import Cluster
-from objects.microcluster import Microcluster  # for comment only
-from scaling.scaler import Scaler
+from chronoclust.clustering.hddstream import HDDStream
+from chronoclust.tracking.cluster_tracker import TrackByHistoricalAssociation
+from chronoclust.tracking.cluster_tracker import TrackByLineage
+from chronoclust.objects.cluster import Cluster
+from chronoclust.objects.microcluster import Microcluster  # for comment only
+from chronoclust.scaling.scaler import Scaler
 
 # Make this global so other function can see them as well for saving and loading
 HDDSTREAM_OBJ = 'hddstream'

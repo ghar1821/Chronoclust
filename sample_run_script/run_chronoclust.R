@@ -7,11 +7,11 @@ library(reticulate)
 # You can either setup the virtual environment via 
 # 1. Anaconda: https://docs.anaconda.com/anaconda/navigator/getting-started/
 # 2. PipEnv: https://docs.python-guide.org/dev/virtualenvs/
-# Chronoclust packages are available from both Anaconda and PyPi. Refer to README for link
+# Chronoclust packages are available from both PyPi. Refer to README for link
 use_virtualenv("chronoclust")
 
 # OPTIONAL: Use this to manually set your working directory
-setwd("/Users/givanna/Documents")
+setwd("/Users/givanna")
 PrimaryDirectory <- getwd()
 
 # Setup Chronoclust
@@ -28,4 +28,5 @@ time_now <- gsub(" ", "_", time_now)
 outdir <- paste0("chronoclust", "_", time_now)
 
 # run chronoclust
-chronoclust$run(config_xml = configfile, input_xml = inputfile, log_dir = outdir, output_dir = outdir)
+chronoclust$chronoclust$run(config_xml = configfile, input_xml = inputfile, log_dir = outdir, output_dir = outdir)
+

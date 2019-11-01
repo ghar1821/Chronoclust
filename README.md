@@ -19,8 +19,7 @@ To run the project you will require the following packages for python 3:
 
 ## How do I use chronoclust?
 Chronoclust is available on:
-1. Anaconda: https://anaconda.org/givanna/chronoclust
-2. Pypi: https://pypi.org/project/chronoclust/
+1. Pypi: https://pypi.org/project/chronoclust/
 
 Download them or just use the stable source code here: https://github.com/ghar1821/Chronoclust/releases
 
@@ -34,12 +33,12 @@ Look at sample_run_script/config/config.xml for an example, and the published ar
 ### Running Chronoclust in Python
 After setting everything up, all you need to is just import chronoclust, and run it like below.
 ```
-import chronoclust
+from chronoclust.main import main
 
 basedir = '/Users/example/Documents/workdir'
 in_file = basedir + '/input.xml'
 config_file = basedir + '/config.xml'
-chronoclust.run(config_file, in_file, basedir, basedir)
+main.run(config_file, in_file, basedir, basedir)
 ```
 In the above script, the input and config files are stored in **/Users/example/Documents/workdir** and the clustering result will also be written into the same directory. You can store the config/input files in different directories (doesn't matter).
 
