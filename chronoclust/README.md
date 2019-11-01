@@ -13,14 +13,18 @@ To run the project you will require the following packages for python 3:
 2. numpy
 3. scipy
 4. scikit-learn
-5. tqdm
-6. numba
+5. pickle
+6. tqdm
 
 ## How do I use chronoclust?
 Chronoclust is available on:
-1. Pypi: https://pypi.org/project/chronoclust/
+1. Anaconda: https://anaconda.org/givanna/chronoclust
+2. Pypi: https://pypi.org/project/chronoclust/
 
 Download them or just use the stable source code here: https://github.com/ghar1821/Chronoclust/releases
+
+A sample run file is provided.
+See```run_chronoclust.py```
 
 Secondly, you need to have a bunch of data (doh!), and create a xml file containing the location of the data files. The files have to be in csv format compressed as gzip (extension csv.gz).
 Each file need to be associated with a time point - day 1, 2, 3 etc.
@@ -32,25 +36,23 @@ Look at sample_run_script/config/config.xml for an example, and the published ar
 ### Running Chronoclust in Python
 After setting everything up, all you need to is just import chronoclust, and run it like below.
 ```
-from chronoclust.main import main
+import chronoclust
 
 basedir = '/Users/example/Documents/workdir'
 in_file = basedir + '/input.xml'
 config_file = basedir + '/config.xml'
-main.run(config_file, in_file, basedir, basedir)
+chronoclust.run(config_file, in_file, basedir, basedir)
 ```
 In the above script, the input and config files are stored in **/Users/example/Documents/workdir** and the clustering result will also be written into the same directory. You can store the config/input files in different directories (doesn't matter).
 
 If you have a _gated_ or _labelled_ data and want to see how effective Chronoclust is, you can pass a ``gating_file`` argument to the run command above and supply it with a csv file containing the centroid of each population or cluster.
-Please look at ``sample_run_script/sample_run.py`` for example.
-
-If you are unsure how to run the raw source code downloaded from github, copy the ``sample_run_script/sample_run_from_raw.py`` to the parent directory of chronoclust folder, modify the variables pointing to the xml files, then just run it.
+Please look at ``sample_run_script/run_chronoclust.py`` for example.
 
 ### Running Chronoclust in R
 Well, Chronoclust is not written in R but thanks to the fabulous people who write [reticulate](https://rstudio.github.io/reticulate/) package, it is now posisble to run Python code in R.
 
 You still need to download Chronoclust API from Anaconda or Pypi and setup the xml files.
-Thereafter, have a look at ``sample_run_script/sample_run.R`` for example on how to run Chronoclust in R.
+Thereafter, have a look at ``sample_run_script/run_chronoclust.R`` for example on how to run Chronoclust in R.
 
 ## Where to start with the parameters?
 You can pretty much start with any value for any parameters, but to at least get some kind of clustering, I recommend you start with setting ``pi`` to be the dimensionality of your dataset (number of columns or markers in the dataset).

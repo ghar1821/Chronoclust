@@ -1,5 +1,5 @@
 import numpy as np
-from chronoclust.objects.microcluster import Microcluster
+from objects.microcluster import Microcluster
 
 class PredeconMC(Microcluster):
 

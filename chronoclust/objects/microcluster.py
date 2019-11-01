@@ -4,7 +4,7 @@ Contain all the objects used in both hddstream and PreDeCon algorithm.
 """
 
 import numpy as np
-import chronoclust.utilities.mc_functions as nmba
+import utilities.mc_functions as nmba
 
 __author__ = "Givanna Putri, Deeksha Singh, Mark Read, and Tao Tang"
 __copyright__ = "Copyright 2017, Cytoclust Project"

@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import shutil
 
-from main import run
+from main.main import run
 
 # note change this when refactoring filename
 current_script_dir = os.path.realpath(__file__).split('/{}'.format(os.path.basename(__file__)))[0]

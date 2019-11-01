@@ -8,8 +8,8 @@ The paper will be referred as paper[2].
 import numpy as np
 
 # from objects.microcluster import Microcluster
-from chronoclust.objects.predecon_mc import PredeconMC
-from chronoclust.utilities import predeconmc_functions as predfunc
+from objects.predecon_mc import PredeconMC
+from utilities import predeconmc_functions as predfunc
 
 __author__ = "Givanna Putri, Deeksha Singh, Mark Read, and Tao Tang"
 __copyright__ = "Copyright 2017, Cytoclust Project"
