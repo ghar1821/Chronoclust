@@ -1,4 +1,4 @@
-# clustering_evaluation
+# Cluster Evaluator
 This package contains all the modules to perform evaluation on Chronoclust clustering result.
 
 ## accuracy measure
