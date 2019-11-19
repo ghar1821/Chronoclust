@@ -144,6 +144,15 @@ class IntegrationTestNormal(unt.TestCase):
                 for ex_dp, dp in zip(ex_dps, dps):
                     np.testing.assert_array_almost_equal(ex_dp, dp, decimal=1)
 
+            # test order of the data points in the output file (must be the same as the input file)
+            dataset = pd.read_csv('{}/test_files/dataset/full_dataset/synthetic_d{}.csv.gz'.format(current_script_dir, i))
+            cluster_dp_df = cluster_dp_df.round(2)
+            data_rows = dataset[['x', 'y', 'z']].to_numpy()
+            cluster_rows = cluster_dp_df[['x', 'y', 'z']].to_numpy()
+
+            for d, c in zip(data_rows, cluster_rows):
+                np.testing.assert_array_almost_equal(d, c, decimal=2)
+
 
 if __name__ == '__main__':
     unt.main()

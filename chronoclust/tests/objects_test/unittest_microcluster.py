@@ -175,10 +175,10 @@ class HelperObjTest(unt.TestCase):
         for idx, p in enumerate(points):
             mc.add_new_point(np.array(p), 0, idx)
 
-        self.assertEqual(10, len(set(mc.points_id)))
+        self.assertEqual(10, len(set(mc.points.keys())))
 
         # there should be id 0-9
-        for expected_id, actual_id in zip(range(10), mc.points_id):
+        for expected_id, actual_id in zip(range(10), mc.points.keys()):
             self.assertEqual(expected_id, actual_id)
 
 

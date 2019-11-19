@@ -273,11 +273,11 @@ def write_datapoints_details(dataset_attributes, clusters, pcoreMCs, outlierMCs,
             # one of the pcore that's part of current day cluster.
             # If we don't have the try condition below, the scaler will throw an error.
             try:
-                points = pcore_mc.points
+                points = list(pcore_mc.points.values())
                 if scaler:
                     points = scaler.reverse_scaling(points).tolist()
 
-                points_id = pcore_mc.points_id
+                points_id = list(pcore_mc.points.keys())
             except ValueError:
                 logger.info("WARN: Pcore {} did not receive new datapoints.".format(pcore_mc.id))
                 continue
@@ -349,10 +349,10 @@ def obtain_unclustered_dp_info(mcs, scaler):
     dp_details = defaultdict(list)
     for mc in mcs:
         try:
-            points = mc.points
+            points = list(mc.points.values())
             if scaler:
                 points = scaler.reverse_scaling(points).tolist()
-            pts_id = mc.points_id
+            pts_id = list(mc.points.keys())
         except ValueError:
             continue
 

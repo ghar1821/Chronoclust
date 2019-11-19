@@ -63,14 +63,9 @@ class Microcluster(object):
             Cluster centroid.
         creation_time_in_hrs : int
             Time when the cluster is created in hours.
-        points : list
-            All the datapoints within the Microcluster.
-        points_timestamp : list
-            The timestamp associated with each datapoint in the Microcluster.
-        points_id : set
-            The id associated with each datapoint in the Microcluster. The id for each datapoint is assigned based
-            on the order it's processed (clustered).
-
+        points : dict
+            All the datapoints within the Microcluster. Key is the points id (assigned when adding new points).
+            Value is the numerical value of the data point.
         """
 
         self.id = id
@@ -80,9 +75,7 @@ class Microcluster(object):
         self.preferred_dimension_vector = preferred_dimension_vector
         self.cluster_centroids = cluster_centroids
         self.creation_time_in_hrs = creation_time_in_hrs
-        self.points = []
-        self.points_timestamp = []
-        self.points_id = set()
+        self.points = {}
 
     def update_preferred_dimensions(self, variance_threshold_squared, k_constant):
         """
@@ -144,9 +137,7 @@ class Microcluster(object):
         self.CF1, self.CF2 = nmba.update_cf(cf1, cf2, new_point_values)
         self.cumulative_weight += new_point_weight
 
-        self.points.append(new_point_values.tolist())
-        self.points_timestamp.append(new_point_timestamp)
-        self.points_id.add(new_point_idx)
+        self.points[new_point_idx] = new_point_values.tolist()
 
         # update the cluster centroid as it may have moved with the introduction of new data point.
         if update_centroid:
@@ -208,8 +199,7 @@ class Microcluster(object):
         cf2 = self.CF2
 
         new_cf1, new_cf2 = nmba.clone_cf(cf1, cf2)
-        return Microcluster(cf1=new_cf1, cf2=new_cf2,
-                                cumulative_weight=self.cumulative_weight)
+        return Microcluster(cf1=new_cf1, cf2=new_cf2, cumulative_weight=self.cumulative_weight)
 
     def get_copy_with_new_point(self, datapoint, variance_threshold_squared, k_constant):
         """
@@ -258,5 +248,4 @@ class Microcluster(object):
 
     def reset_points(self):
         # TODO revisit this
-        self.points.clear()
-        self.points_timestamp.clear()
+        self.points = {}
