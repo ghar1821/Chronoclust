@@ -3,3 +3,6 @@
 .idea/
 
 .DS_Store
+*.pyc
+sample_run_script/.DS_Store
+sample_run_script/.DS_Store
