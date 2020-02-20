@@ -186,7 +186,7 @@ class HDDStream(object):
                          f"Decay rate(lambda) = {self.lambbda}\n"
                          f"Radius threshold(epsilon) = {self.epsilon}\n"
                          f"Max projected dimensionality(pi) = {self.pi}\n"
-                         f"Density threshold(mu) = {self.mu} = {self.config.find('mu').text}\n"
+                         f"Density threshold(mu) = {self.mu} = {self.mu}\n"
                          f"Variance threshold(delta) = {self.delta}\n"
                          f"K = {self.k}\n"
                          f"PreDeCon epsilon(upsilon) = {self.upsilon}\n"
