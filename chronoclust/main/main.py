@@ -30,47 +30,31 @@ TRACKER_HISTORICAL_ASSOC = 'tracking_by_historical_association'
 TRACKER_LINEAGE = 'tracking_by_lineage'
 
 
-def run(config_xml, input_xml, log_dir, output_dir, gating_file=None, program_state_dir=None, sort_output=False,
-        normalise=True):
-    """
-    Run Chronoclust
+def run(data, output_directory,
+        gating_centroid_file=None, normalise_data=True,
+        param_beta=0.5, param_delta=0.05, param_epsilon=0.03, param_lambda=0.5,
+        param_k=15, param_mu=0.005, param_pi=0, param_omicron=0.00001, param_upsilon=2):
 
-    Parameters
-    ----------
-    config_xml : str
-        xml file containing config for chronoclust
-    input_xml : str
-        xml file containing location of data files for chronoclust
-    log_dir : str
-        location to store chronoclust's log
-    output_dir : str
-        output directory to store chronoclust's result
-    gating_file : str
-        Optional, if there is gating done on the data file, it can be supplied to estimate the
-        corresponding label for each chronoclust's cluster.
-    program_state_dir : str
-        Optional, in case chronoclust's old execution was halted/killed, u can 'reboot' it using
-        one of its old image.
-    sort_output : bool
-        Optional, if True, the csv file containing the cluster assignment for each data point is ordered
-        based on the ordering of the input file. Otherwise it'll be ordered based on the cluster id alphabetically i.e.
-        data points for cluster A will occur before cluster B.
-    normalise : bool
-        Whether to normalise the dataset before clustering. Note that if this is True, the returned result will
-        be denormalised
-
-    Returns
-    -------
-    None
-
-    """
+    # if we're continuing execution, the program images must be within the output directory
+    program_state_dir = '{}/program_images'.format(output_directory)
 
     # setup logger object
-    logger = setup_logger('{}/logs'.format(log_dir))
+    log_dir = '{}/logs'.format(output_directory)
+    logger = setup_logger(log_dir)
     logger.info("Chronoclust start")
 
     # Get hddstream config
-    config = et.parse(config_xml).getroot().find("config")
+    config = {
+        "beta": param_beta,
+        "delta": param_delta,
+        "epsilon": param_epsilon,
+        "lambda": param_lambda,
+        "k": param_k,
+        "mu": param_mu,
+        "pi": param_pi,
+        "omicron": param_omicron,
+        "upsilon": param_upsilon
+    }
 
     # If there is a program state given, we'll search for hddstream's steam and continue from it.
     # Otherwise we'll reinitialise hddstream based on the config
@@ -86,18 +70,16 @@ def run(config_xml, input_xml, log_dir, output_dir, gating_file=None, program_st
         tracker_by_association = TrackByHistoricalAssociation()
         tracker_by_lineage = TrackByLineage()
 
-    # parse the input xml to get the location of input dataset
-    dataset_files_xml_entries = et.parse(input_xml).findall("file")
+    # find the features of the dataset by reading in the very first data file
+    dataset_attributes = get_dataset_attributes(data[0])
 
-    dataset_attributes = get_dataset_attributes(dataset_files_xml_entries[0].find('filename').text)
-
-    result_filename = f'{output_dir}/result.csv'
+    result_filename = f'{output_directory}/result.csv'
 
     result_file_header = ['timepoint', 'cumulative_size', 'pcore_ids', 'pref_dimensions'] + dataset_attributes + \
                          ['tracking_by_lineage', 'tracking_by_association']
 
     # Setup gating data
-    gating_df = None if gating_file is None else pd.read_csv(gating_file)
+    gating_df = None if gating_centroid_file is None else pd.read_csv(gating_centroid_file)
     gating = defaultdict(dict)
     if gating_df is not None:
 
@@ -115,13 +97,12 @@ def run(config_xml, input_xml, log_dir, output_dir, gating_file=None, program_st
 
     # Setup scaler if choose to normalise data
     scaler = None
-    if normalise:
+    if normalise_data:
         logger.info("Setting up scaler")
-        scaler = Scaler(input_data_xml=input_xml)
+        scaler = Scaler(data)
 
-    for xml_entry in dataset_files_xml_entries:
-
-        timepoint = int(xml_entry.find("timepoint").text)
+    # timepoint assuming the data_file is in order of time points
+    for timepoint, data_file in enumerate(data):
 
         # This is to find out the last time point processed by hddstream in previous state.
         # If it was restored, this will skip the time points that have been processed.
@@ -132,13 +113,12 @@ def run(config_xml, input_xml, log_dir, output_dir, gating_file=None, program_st
             continue
 
         # Read dataset
-        logger.info(f"Processing dataset for timepoint {timepoint}")
-        dataset_filename = xml_entry.find("filename").text
-        dataset = pd.read_csv(dataset_filename, compression='gzip', header=0, sep=',').to_numpy()
+        logger.info("Processing dataset {}".format(timepoint))
+        dataset = pd.read_csv(data_file, header=0, sep=',').to_numpy()
 
         # normalise the dataset if needed
-        if normalise:
-            logger.info("Scaling data")
+        if normalise_data:
+            logger.info("Scaling dataset {}".format(timepoint))
             dataset = scaler.scale_data(dataset)
 
         # Start clustering
@@ -167,12 +147,12 @@ def run(config_xml, input_xml, log_dir, output_dir, gating_file=None, program_st
         # Starting with overall result file
         write_result_file(gating, result_filename, timepoint, tracker_by_association, scaler=scaler)
 
-        cluster_points_filename = f'{output_dir}/cluster_points_D{timepoint}.csv'
+        cluster_points_filename = f'{output_directory}/cluster_points_D{timepoint}.csv'
         clusters = tracker_by_lineage.child_clusters
         pcoreMCs = hddstream.pcore_MC
         outlierMCs = hddstream.outlier_MC
         write_datapoints_details(dataset_attributes, clusters, pcoreMCs, outlierMCs, logger, cluster_points_filename,
-                                 sort_output, scaler)
+                                 True, scaler)
 
         # Prepare for the next time point
         tracker_by_lineage.transfer_child_to_parent()
@@ -180,10 +160,10 @@ def run(config_xml, input_xml, log_dir, output_dir, gating_file=None, program_st
 
         # Save program state
         logger.info("Saving Chronoclust state for timepoint {}".format(timepoint))
-        save_program_state(hddstream, output_dir, tracker_by_association, tracker_by_lineage)
+        save_program_state(hddstream, output_directory, tracker_by_association, tracker_by_lineage)
 
     # Write out the hddstream setting
-    settings_filename = f'{output_dir}/parameters.xml'
+    settings_filename = f'{output_directory}/parameters.xml'
     with open(settings_filename, 'ab') as f:
         # This append the config of hddstream to the result file.
         f.write(et.tostring(config, encoding='utf8', method="xml"))
@@ -456,7 +436,8 @@ def append_to_file(filename, content):
 
 
 def get_dataset_attributes(dataset_file):
-    return pd.read_csv(dataset_file, compression='gzip', sep=',', header=None).iloc[0].values.tolist()
+    # let pandas infer whether the dataset file is compressed or not based on the filename extension.
+    return pd.read_csv(dataset_file, sep=',', header=None).iloc[0].values.tolist()
 
 
 def find_closest_gating(gating_dict, cluster, scaler):
