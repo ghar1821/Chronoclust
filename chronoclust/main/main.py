@@ -34,6 +34,53 @@ def run(data, output_directory,
         gating_centroid_file=None, normalise_data=True,
         param_beta=0.5, param_delta=0.05, param_epsilon=0.03, param_lambda=0.5,
         param_k=15, param_mu=0.005, param_pi=0, param_omicron=0.00001, param_upsilon=2):
+    """
+    Run Chronoclust.
+
+    Parameters
+    ----------
+    data : list
+        List of names of data file for each time point.
+        Make sure that they are order in order of time point (Day 1,2, etc.).
+    output_directory : str
+        Name of directory where the result will be stored.
+        ChronoClust automatically write out results in csv format.
+    gating_centroid_file : str, optional
+        File containing the centroid of the data - assuming it's already gated/labelled.
+        If you have pre-labelled data, you can write up the centroid of each group/population in each time point in a
+        csv file and pass it here.
+        It will be used to assign each Chronoclust's cluster a label that is in this file.
+        The assignment is based on cluster's proximity to the groups i.e. each cluster is assigned the label that lies
+        the closest to it using "weighted" euclidean distance.
+    normalise_data : boolean, optional
+        Whether to normalise all your data to within 0-1 range.
+        What this does is call a normaliser that collate all data files and altogether normalise them.
+        Note: if you call this, the final clustering result will be de-normalise to your original data range.
+    param_beta : float, optional
+        Value for beta parameter for Chronoclust.
+    param_delta : float, optional
+        Value for delta parameter for Chronoclust.
+    param_epsilon : float, optional
+        Value for epsilon parameter for Chronoclust.
+    param_lambda : float, optional
+        Value for lambda parameter for Chronoclust.
+    param_k : float, optional
+        Value for k parameter for Chronoclust.
+    param_mu : float, optional
+        Value for mu parameter for Chronoclust.
+    param_pi : float, optional
+        Value for pi parameter for Chronoclust.
+    param_omicron : float, optional
+        Value for omicron parameter for Chronoclust.
+    param_upsilon : float, optional
+        Value for upsilon parameter for Chronoclust.
+
+    Returns
+    -------
+    None :
+        Nothing is returned. This method just run Chronoclust and write up the result in output_directory.
+
+    """
 
     # if we're continuing execution, the program images must be within the output directory
     program_state_dir = '{}/program_images'.format(output_directory)
