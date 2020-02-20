@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="chronoclust", # Replace with your own username
+    name="chronoclust",
     version="0.2.4",
     author="Givanna Putri",
     author_email="ghar1821@uni.sydney.edu.au",

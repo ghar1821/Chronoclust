@@ -3,7 +3,7 @@ import logging
 import xml.etree.ElementTree as et
 import numpy as np
 
-from clustering.hddstream import HDDStream
+from chronoclust.clustering.hddstream import HDDStream
 
 
 class HelperObjTest(unt.TestCase):
@@ -18,6 +18,9 @@ class HelperObjTest(unt.TestCase):
         of each dimension is still under 0.3.
         However when the last data point is added, the last dimension is no longer preferred.
         """
+        config = {
+            
+        }
         config_xml = '<params>' \
                    '    <config>' \
                    '        <beta>0.5</beta>' \

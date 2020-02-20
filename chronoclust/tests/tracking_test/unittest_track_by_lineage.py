@@ -1,7 +1,7 @@
 import unittest as unt
 
-from objects.cluster import Cluster
-import tracking.cluster_tracker as ct
+from chronoclust.objects.cluster import Cluster
+import chronoclust.tracking.cluster_tracker as ct
 
 
 class TrackByLineageTest(unt.TestCase):

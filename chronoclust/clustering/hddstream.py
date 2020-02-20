@@ -21,9 +21,9 @@ import logging
 import io
 
 from tqdm import tqdm
-from clustering.predecon import PreDeCon
-from objects.microcluster import Microcluster
-from objects.predecon_mc import PredeconMC
+from chronoclust.clustering.predecon import PreDeCon
+from chronoclust.objects.microcluster import Microcluster
+from chronoclust.objects.predecon_mc import PredeconMC
 
 
 class HDDStream(object):
