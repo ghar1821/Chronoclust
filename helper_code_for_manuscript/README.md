@@ -17,3 +17,6 @@ The folder contains all the codes used to evaluate how good the clustering produ
 The script name describe the evaluation method therein.
 
 ``evaluator.py`` script is the main script to run all the methods.
+
+## Config
+Directory containing sample config file for cluster labelling and evaluator.
