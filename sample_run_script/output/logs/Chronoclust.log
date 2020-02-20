@@ -1,124 +1,127 @@
-2019-11-19 12:09:50,029 [INFO    ] Chronoclust start
-2019-11-19 12:09:50,048 [INFO    ] Setup new Chronoclust state
-2019-11-19 12:09:50,075 [INFO    ] Setting up scaler
-2019-11-19 12:09:50,145 [INFO    ] Processing dataset for timepoint 0
-2019-11-19 12:09:50,152 [INFO    ] Scaling data
-2019-11-19 12:09:50,152 [INFO    ] Setting up online phase for timepoint 0 with following params:
+2020-02-20 17:58:04,446 [INFO    ] Chronoclust start
+2020-02-20 17:58:04,446 [INFO    ] Setup new Chronoclust state
+2020-02-20 17:58:04,475 [INFO    ] Setting up scaler
+2020-02-20 17:58:04,614 [INFO    ] Processing dataset 0
+2020-02-20 17:58:04,624 [INFO    ] Scaling dataset 0
+2020-02-20 17:58:04,626 [INFO    ] Setting up online phase for timepoint 0 with following params:
 Pcore density threshold factor(beta) = 0.2
 Decay rate(lambda) = 2.0
 Radius threshold(epsilon) = 0.03
 Max projected dimensionality(pi) = 3
-Density threshold(mu) = 71.0 = 0.01
+Density threshold(mu) = 71.0 = 71.0
 Variance threshold(delta) = 0.05
 K = 4.0
 PreDeCon epsilon(upsilon) = 0.195
 Outlier deletion point(omicron) = 0.0
 
-2019-11-19 12:09:50,152 [INFO    ] Starting online microcluster maintenance for timepoint 0
-2019-11-19 12:09:50,154 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
-2019-11-19 12:09:51,453 [INFO    ] 0%|          | 2/7100 [00:01<1:16:50,  1.54it/s]
-2019-11-19 12:09:51,954 [INFO    ] 100%|##########| 7100/7100 [00:01<00:00, 3943.22it/s]
-2019-11-19 12:09:51,955 [INFO    ] Finish online microcluster maintenance for timepoint 0
-2019-11-19 12:09:51,955 [INFO    ] Online maintenance yield 2 pcores and 21 outlier
-2019-11-19 12:09:52,603 [INFO    ] Starting offline clustering with 2 core clusters and 0 pcore clusters.
-2019-11-19 12:09:53,380 [INFO    ] Finish offline clustering for dataset with timepoint: 0
-2019-11-19 12:09:53,381 [INFO    ] Offline clustering yield 2 clusters.
-2019-11-19 12:09:53,455 [INFO    ] Saving Chronoclust state for timepoint 0
-2019-11-19 12:09:53,461 [INFO    ] Processing dataset for timepoint 1
-2019-11-19 12:09:53,466 [INFO    ] Scaling data
-2019-11-19 12:09:53,466 [INFO    ] Setting up online phase for timepoint 1 with following params:
+2020-02-20 17:58:04,626 [INFO    ] Starting online microcluster maintenance for timepoint 0
+2020-02-20 17:58:04,629 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
+2020-02-20 17:58:05,671 [INFO    ] 0%|          | 1/7100 [00:01<2:03:15,  1.04s/it]
+2020-02-20 17:58:06,671 [INFO    ] 8%|8         | 591/7100 [00:02<1:19:09,  1.37it/s]
+2020-02-20 17:58:07,281 [INFO    ] 100%|##########| 7100/7100 [00:02<00:00, 2678.20it/s]
+2020-02-20 17:58:07,281 [INFO    ] Finish online microcluster maintenance for timepoint 0
+2020-02-20 17:58:07,281 [INFO    ] Online maintenance yield 2 pcores and 21 outlier
+2020-02-20 17:58:07,721 [INFO    ] Starting offline clustering with 2 core clusters and 0 pcore clusters.
+2020-02-20 17:58:08,539 [INFO    ] Finish offline clustering for dataset with timepoint: 0
+2020-02-20 17:58:08,539 [INFO    ] Offline clustering yield 2 clusters.
+2020-02-20 17:58:08,686 [INFO    ] Saving Chronoclust state for timepoint 0
+2020-02-20 17:58:08,695 [INFO    ] Processing dataset 1
+2020-02-20 17:58:08,703 [INFO    ] Scaling dataset 1
+2020-02-20 17:58:08,703 [INFO    ] Setting up online phase for timepoint 1 with following params:
 Pcore density threshold factor(beta) = 0.2
 Decay rate(lambda) = 2.0
 Radius threshold(epsilon) = 0.03
 Max projected dimensionality(pi) = 3
-Density threshold(mu) = 71.0 = 0.01
+Density threshold(mu) = 71.0 = 71.0
 Variance threshold(delta) = 0.05
 K = 4.0
 PreDeCon epsilon(upsilon) = 0.195
-Outlier deletion point(omicron) = 0.0030885
+Outlier deletion point(omicron) = 0.030885
 
-2019-11-19 12:09:53,466 [INFO    ] Decaying and downgrading microclusters
-2019-11-19 12:09:53,467 [INFO    ] Starting online microcluster maintenance for timepoint 1
-2019-11-19 12:09:53,467 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
-2019-11-19 12:09:54,467 [INFO    ] 55%|#####4    | 3884/7100 [00:01<00:00, 3883.83it/s]
-2019-11-19 12:09:54,951 [INFO    ] 100%|##########| 7100/7100 [00:01<00:00, 4786.12it/s]
-2019-11-19 12:09:54,980 [INFO    ] Finish online microcluster maintenance for timepoint 1
-2019-11-19 12:09:54,980 [INFO    ] Online maintenance yield 5 pcores and 62 outlier
-2019-11-19 12:09:55,279 [INFO    ] Starting offline clustering with 5 core clusters and 0 pcore clusters.
-2019-11-19 12:09:55,280 [INFO    ] Finish offline clustering for dataset with timepoint: 1
-2019-11-19 12:09:55,280 [INFO    ] Offline clustering yield 3 clusters.
-2019-11-19 12:09:55,422 [INFO    ] Saving Chronoclust state for timepoint 1
-2019-11-19 12:09:55,429 [INFO    ] Processing dataset for timepoint 2
-2019-11-19 12:09:55,433 [INFO    ] Scaling data
-2019-11-19 12:09:55,434 [INFO    ] Setting up online phase for timepoint 2 with following params:
+2020-02-20 17:58:08,703 [INFO    ] Decaying and downgrading microclusters
+2020-02-20 17:58:08,704 [INFO    ] Starting online microcluster maintenance for timepoint 1
+2020-02-20 17:58:08,704 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
+2020-02-20 17:58:09,705 [INFO    ] 26%|##6       | 1881/7100 [00:01<00:02, 1880.42it/s]
+2020-02-20 17:58:10,658 [INFO    ] 100%|##########| 7100/7100 [00:01<00:00, 3635.25it/s]
+2020-02-20 17:58:10,658 [INFO    ] Finish online microcluster maintenance for timepoint 1
+2020-02-20 17:58:10,658 [INFO    ] Online maintenance yield 5 pcores and 62 outlier
+2020-02-20 17:58:11,086 [INFO    ] Starting offline clustering with 5 core clusters and 0 pcore clusters.
+2020-02-20 17:58:11,087 [INFO    ] Finish offline clustering for dataset with timepoint: 1
+2020-02-20 17:58:11,087 [INFO    ] Offline clustering yield 3 clusters.
+2020-02-20 17:58:11,266 [INFO    ] Saving Chronoclust state for timepoint 1
+2020-02-20 17:58:11,278 [INFO    ] Processing dataset 2
+2020-02-20 17:58:11,287 [INFO    ] Scaling dataset 2
+2020-02-20 17:58:11,288 [INFO    ] Setting up online phase for timepoint 2 with following params:
 Pcore density threshold factor(beta) = 0.2
 Decay rate(lambda) = 2.0
 Radius threshold(epsilon) = 0.03
 Max projected dimensionality(pi) = 3
-Density threshold(mu) = 71.0 = 0.01
+Density threshold(mu) = 71.0 = 71.0
 Variance threshold(delta) = 0.05
 K = 4.0
 PreDeCon epsilon(upsilon) = 0.195
-Outlier deletion point(omicron) = 0.0030885
+Outlier deletion point(omicron) = 0.030885
 
-2019-11-19 12:09:55,434 [INFO    ] Decaying and downgrading microclusters
-2019-11-19 12:09:55,434 [INFO    ] Starting online microcluster maintenance for timepoint 2
-2019-11-19 12:09:55,435 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
-2019-11-19 12:09:56,435 [INFO    ] 87%|########7 | 6198/7100 [00:01<00:00, 6197.00it/s]
-2019-11-19 12:09:56,608 [INFO    ] 100%|##########| 7100/7100 [00:01<00:00, 6053.65it/s]
-2019-11-19 12:09:56,608 [INFO    ] Finish online microcluster maintenance for timepoint 2
-2019-11-19 12:09:56,608 [INFO    ] Online maintenance yield 7 pcores and 84 outlier
-2019-11-19 12:09:56,608 [INFO    ] Starting offline clustering with 6 core clusters and 1 pcore clusters.
-2019-11-19 12:09:56,609 [INFO    ] Finish offline clustering for dataset with timepoint: 2
-2019-11-19 12:09:56,609 [INFO    ] Offline clustering yield 4 clusters.
-2019-11-19 12:09:56,700 [INFO    ] Saving Chronoclust state for timepoint 2
-2019-11-19 12:09:56,709 [INFO    ] Processing dataset for timepoint 3
-2019-11-19 12:09:56,737 [INFO    ] Scaling data
-2019-11-19 12:09:56,738 [INFO    ] Setting up online phase for timepoint 3 with following params:
+2020-02-20 17:58:11,288 [INFO    ] Decaying and downgrading microclusters
+2020-02-20 17:58:11,289 [INFO    ] Starting online microcluster maintenance for timepoint 2
+2020-02-20 17:58:11,290 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
+2020-02-20 17:58:12,290 [INFO    ] 69%|######9   | 4915/7100 [00:01<00:00, 4914.99it/s]
+2020-02-20 17:58:12,817 [INFO    ] 100%|##########| 7100/7100 [00:01<00:00, 4650.98it/s]
+2020-02-20 17:58:12,817 [INFO    ] Finish online microcluster maintenance for timepoint 2
+2020-02-20 17:58:12,817 [INFO    ] Online maintenance yield 7 pcores and 84 outlier
+2020-02-20 17:58:12,817 [INFO    ] Starting offline clustering with 6 core clusters and 1 pcore clusters.
+2020-02-20 17:58:12,819 [INFO    ] Finish offline clustering for dataset with timepoint: 2
+2020-02-20 17:58:12,819 [INFO    ] Offline clustering yield 4 clusters.
+2020-02-20 17:58:12,945 [INFO    ] Saving Chronoclust state for timepoint 2
+2020-02-20 17:58:12,960 [INFO    ] Processing dataset 3
+2020-02-20 17:58:12,967 [INFO    ] Scaling dataset 3
+2020-02-20 17:58:12,967 [INFO    ] Setting up online phase for timepoint 3 with following params:
 Pcore density threshold factor(beta) = 0.2
 Decay rate(lambda) = 2.0
 Radius threshold(epsilon) = 0.03
 Max projected dimensionality(pi) = 3
-Density threshold(mu) = 71.0 = 0.01
+Density threshold(mu) = 71.0 = 71.0
 Variance threshold(delta) = 0.05
 K = 4.0
 PreDeCon epsilon(upsilon) = 0.195
-Outlier deletion point(omicron) = 0.0030885
+Outlier deletion point(omicron) = 0.030885
 
-2019-11-19 12:09:56,738 [INFO    ] Decaying and downgrading microclusters
-2019-11-19 12:09:56,739 [INFO    ] Starting online microcluster maintenance for timepoint 3
-2019-11-19 12:09:56,739 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
-2019-11-19 12:09:57,739 [INFO    ] 59%|#####8    | 4163/7100 [00:01<00:00, 4162.35it/s]
-2019-11-19 12:09:58,474 [INFO    ] 100%|##########| 7100/7100 [00:01<00:00, 4093.02it/s]
-2019-11-19 12:09:58,474 [INFO    ] Finish online microcluster maintenance for timepoint 3
-2019-11-19 12:09:58,474 [INFO    ] Online maintenance yield 10 pcores and 101 outlier
-2019-11-19 12:09:58,474 [INFO    ] Starting offline clustering with 10 core clusters and 0 pcore clusters.
-2019-11-19 12:09:58,477 [INFO    ] Finish offline clustering for dataset with timepoint: 3
-2019-11-19 12:09:58,477 [INFO    ] Offline clustering yield 5 clusters.
-2019-11-19 12:09:58,564 [INFO    ] Saving Chronoclust state for timepoint 3
-2019-11-19 12:09:58,574 [INFO    ] Processing dataset for timepoint 4
-2019-11-19 12:09:58,580 [INFO    ] Scaling data
-2019-11-19 12:09:58,580 [INFO    ] Setting up online phase for timepoint 4 with following params:
+2020-02-20 17:58:12,967 [INFO    ] Decaying and downgrading microclusters
+2020-02-20 17:58:12,969 [INFO    ] Starting online microcluster maintenance for timepoint 3
+2020-02-20 17:58:12,970 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
+2020-02-20 17:58:13,970 [INFO    ] 31%|###1      | 2234/7100 [00:01<00:02, 2233.33it/s]
+2020-02-20 17:58:14,970 [INFO    ] 70%|######9   | 4936/7100 [00:02<00:00, 2355.84it/s]
+2020-02-20 17:58:15,696 [INFO    ] 100%|##########| 7100/7100 [00:02<00:00, 2604.53it/s]
+2020-02-20 17:58:15,696 [INFO    ] Finish online microcluster maintenance for timepoint 3
+2020-02-20 17:58:15,697 [INFO    ] Online maintenance yield 10 pcores and 99 outlier
+2020-02-20 17:58:15,697 [INFO    ] Starting offline clustering with 10 core clusters and 0 pcore clusters.
+2020-02-20 17:58:15,700 [INFO    ] Finish offline clustering for dataset with timepoint: 3
+2020-02-20 17:58:15,700 [INFO    ] Offline clustering yield 5 clusters.
+2020-02-20 17:58:15,832 [INFO    ] Saving Chronoclust state for timepoint 3
+2020-02-20 17:58:15,850 [INFO    ] Processing dataset 4
+2020-02-20 17:58:15,857 [INFO    ] Scaling dataset 4
+2020-02-20 17:58:15,858 [INFO    ] Setting up online phase for timepoint 4 with following params:
 Pcore density threshold factor(beta) = 0.2
 Decay rate(lambda) = 2.0
 Radius threshold(epsilon) = 0.03
 Max projected dimensionality(pi) = 3
-Density threshold(mu) = 71.0 = 0.01
+Density threshold(mu) = 71.0 = 71.0
 Variance threshold(delta) = 0.05
 K = 4.0
 PreDeCon epsilon(upsilon) = 0.195
-Outlier deletion point(omicron) = 0.0030885
+Outlier deletion point(omicron) = 0.030885
 
-2019-11-19 12:09:58,580 [INFO    ] Decaying and downgrading microclusters
-2019-11-19 12:09:58,581 [INFO    ] Starting online microcluster maintenance for timepoint 4
-2019-11-19 12:09:58,582 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
-2019-11-19 12:09:59,582 [INFO    ] 42%|####2     | 2986/7100 [00:01<00:01, 2985.33it/s]
-2019-11-19 12:10:00,582 [INFO    ] 80%|#######9  | 5660/7100 [00:02<00:00, 2884.30it/s]
-2019-11-19 12:10:01,077 [INFO    ] 100%|##########| 7100/7100 [00:02<00:00, 2845.06it/s]
-2019-11-19 12:10:01,077 [INFO    ] Finish online microcluster maintenance for timepoint 4
-2019-11-19 12:10:01,077 [INFO    ] Online maintenance yield 15 pcores and 128 outlier
-2019-11-19 12:10:01,078 [INFO    ] Starting offline clustering with 15 core clusters and 0 pcore clusters.
-2019-11-19 12:10:01,082 [INFO    ] Finish offline clustering for dataset with timepoint: 4
-2019-11-19 12:10:01,082 [INFO    ] Offline clustering yield 10 clusters.
-2019-11-19 12:10:01,168 [INFO    ] Saving Chronoclust state for timepoint 4
-2019-11-19 12:10:01,194 [INFO    ] Chronoclust finish
+2020-02-20 17:58:15,858 [INFO    ] Decaying and downgrading microclusters
+2020-02-20 17:58:15,860 [INFO    ] Starting online microcluster maintenance for timepoint 4
+2020-02-20 17:58:15,860 [INFO    ] 0%|          | 0/7100 [00:00<?, ?it/s]
+2020-02-20 17:58:16,861 [INFO    ] 29%|##8       | 2040/7100 [00:01<00:02, 2039.96it/s]
+2020-02-20 17:58:17,861 [INFO    ] 57%|#####7    | 4057/7100 [00:02<00:01, 2032.90it/s]
+2020-02-20 17:58:18,861 [INFO    ] 82%|########2 | 5836/7100 [00:03<00:00, 1949.07it/s]
+2020-02-20 17:58:19,469 [INFO    ] 100%|##########| 7100/7100 [00:03<00:00, 1967.71it/s]
+2020-02-20 17:58:19,469 [INFO    ] Finish online microcluster maintenance for timepoint 4
+2020-02-20 17:58:19,469 [INFO    ] Online maintenance yield 15 pcores and 124 outlier
+2020-02-20 17:58:19,469 [INFO    ] Starting offline clustering with 15 core clusters and 0 pcore clusters.
+2020-02-20 17:58:19,475 [INFO    ] Finish offline clustering for dataset with timepoint: 4
+2020-02-20 17:58:19,475 [INFO    ] Offline clustering yield 10 clusters.
+2020-02-20 17:58:19,609 [INFO    ] Saving Chronoclust state for timepoint 4
+2020-02-20 17:58:19,629 [INFO    ] Chronoclust finish

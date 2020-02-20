@@ -45,19 +45,10 @@ class IntegrationTestNormal(unt.TestCase):
 
         gating = '{}/test_files/dataset/full_dataset/gating_centroids.csv'.format(current_script_dir)
 
-        run(data=data,
-            output_directory=out_dir,
-            gating_centroid_file=gating,
-            param_beta=config['beta'],
-            param_delta=config['delta'],
-            param_epsilon=config['epsilon'],
-            param_lambda=config['lambda'],
-            param_k=config['k'],
-            param_mu=config['mu'],
-            param_pi=config['pi'],
-            param_omicron=config['omicron'],
-            param_upsilon=config['upsilon']
-            )
+        run(data=data, output_directory=out_dir, gating_centroid_file=gating, param_beta=config['beta'],
+            param_delta=config['delta'], param_epsilon=config['epsilon'], param_lambda=config['lambda'],
+            param_k=config['k'], param_mu=config['mu'], param_pi=config['pi'], param_omicron=config['omicron'],
+            param_upsilon=config['upsilon'])
 
 
     @classmethod

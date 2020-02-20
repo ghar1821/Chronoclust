@@ -30,10 +30,10 @@ TRACKER_HISTORICAL_ASSOC = 'tracking_by_historical_association'
 TRACKER_LINEAGE = 'tracking_by_lineage'
 
 
-def run(data, output_directory,
-        gating_centroid_file=None, normalise_data=True,
-        param_beta=0.5, param_delta=0.05, param_epsilon=0.03, param_lambda=0.5,
-        param_k=15, param_mu=0.005, param_pi=0, param_omicron=0.00001, param_upsilon=2):
+def run(data, output_directory, gating_centroid_file=None, normalise_data=True, restore_program=False,
+        param_beta=0.5, param_delta=0.05,
+        param_epsilon=0.03, param_lambda=0.5, param_k=15, param_mu=0.005, param_pi=0, param_omicron=0.00001,
+        param_upsilon=2):
     """
     Run Chronoclust.
 
@@ -56,6 +56,9 @@ def run(data, output_directory,
         Whether to normalise all your data to within 0-1 range.
         What this does is call a normaliser that collate all data files and altogether normalise them.
         Note: if you call this, the final clustering result will be de-normalise to your original data range.
+    restore_program : boolean, optional
+        Whether to restore previous Chronoclust saved state. If this is set to true, make sure you have the images
+        stored in the output_directory under program_images directory.
     param_beta : float, optional
         Value for beta parameter for Chronoclust.
     param_delta : float, optional
@@ -103,14 +106,19 @@ def run(data, output_directory,
         "upsilon": param_upsilon
     }
 
-    # If there is a program state given, we'll search for hddstream's steam and continue from it.
+    # If there is a program image given, we'll search for hddstream's steam and continue from it.
     # Otherwise we'll reinitialise hddstream based on the config
-    if os.path.exists(program_state_dir):
+    program_state_dir_exists = os.path.exists(program_state_dir)
+    if restore_program and program_state_dir_exists:
         logger.info("Restoring Chronoclust state saved in {}".format(program_state_dir))
         hddstream, tracker_by_association, tracker_by_lineage = restore_program_state(program_state_dir)
         hddstream.set_logger(logger)
         hddstream.set_config(config)
     else:
+        # this means either we're not restoring or the images directory does not exists
+        if restore_program and not program_state_dir_exists:
+            logger.warning("Restoring previous Chronoclust state not possible as program_images is not in {}".format(
+                output_directory))
         logger.info("Setup new Chronoclust state")
         hddstream = HDDStream(config, logger)
         # Setup the trackers
@@ -156,7 +164,7 @@ def run(data, output_directory,
         # Otherwise hddstream.last_data_timestamp will be initialise to 0 and the continue won't happen.
         # Need to have the first condition as well because otherwise
         # it'll skip the very first time point if not restoring.
-        if os.path.exists(program_state_dir) and hddstream.last_data_timestamp >= timepoint:
+        if restore_program and program_state_dir_exists and hddstream.last_data_timestamp >= timepoint:
             continue
 
         # Read dataset
