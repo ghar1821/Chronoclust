@@ -8,7 +8,6 @@ from chronoclust.main.main import run
 
 # note change this when refactoring filename
 current_script_dir = os.path.realpath(__file__).split('/{}'.format(os.path.basename(__file__)))[0]
-input_file = '{}/test_files/config/input_normal.xml'.format(current_script_dir)
 out_dir = '{}/test_files/output'.format(current_script_dir)
 
 
@@ -26,19 +25,40 @@ class IntegrationTestNormal(unt.TestCase):
         # We need to write the input xml file first. Template is already given.
         # This is because the location of the data file will vary from machine to machine, and the last thing
         # we want to do is changing the xml file as we transfer between machine.
-        template_file = '{}/test_files/config/input_template.xml'.format(current_script_dir)
 
-        with open(template_file, 'r') as file:
-            data = file.read().format(codedir=current_script_dir, dataset_subdir='full_dataset')
-            with open(input_file, 'w') as f:
-                f.write(data)
+        data = ['{codedir}/test_files/dataset/full_dataset/synthetic_d{t}.csv.gz'.format(
+            codedir=current_script_dir,
+            t=day
+        ) for day in range(5)]
 
-        config_xml = '{}/test_files/config/config_normal.xml'.format(current_script_dir)
+        config = {
+            "beta": 0.2,
+            "delta": 0.05,
+            "epsilon": 0.03,
+            "lambda": 2,
+            "k": 4,
+            "mu": 0.01,
+            "pi": 3,
+            "omicron": 0.000000435,
+            "upsilon": 6.5
+        }
+
         gating = '{}/test_files/dataset/full_dataset/gating_centroids.csv'.format(current_script_dir)
-        prog = None
 
-        run(config_xml=config_xml, input_xml=input_file, output_dir=out_dir, log_dir=out_dir, gating_file=gating,
-            program_state_dir=prog, sort_output=True, normalise=True)
+        run(data=data,
+            output_directory=out_dir,
+            gating_centroid_file=gating,
+            param_beta=config['beta'],
+            param_delta=config['delta'],
+            param_epsilon=config['epsilon'],
+            param_lambda=config['lambda'],
+            param_k=config['k'],
+            param_mu=config['mu'],
+            param_pi=config['pi'],
+            param_omicron=config['omicron'],
+            param_upsilon=config['upsilon']
+            )
+
 
     @classmethod
     def tearDownClass(cls):
@@ -51,7 +71,6 @@ class IntegrationTestNormal(unt.TestCase):
         """
 
         shutil.rmtree('{}/test_files/output'.format(current_script_dir))
-        os.remove(input_file)
 
     def test_normal_result(self):
 
@@ -101,20 +120,12 @@ class IntegrationTestNormal(unt.TestCase):
 
             self.assertEqual(getattr(ex_row, 'predicted_label'), row['predicted_label'].to_numpy()[0])
 
-    def test_normal_cluster_dp(self):
-        """
-        Normal run where there are clusters, all kinds of MCs, and unclustered data.
-        The dataset is based on synthetic dataset used for original Chronoclust paper.
-        Only testing the cluster points file here.
-
-        Returns
-        -------
-        None
-
-        """
+        # TODO move this to separate method
+        # test cluster points
         for i in range(5):
             cluster_dp_df = pd.read_csv('{}/cluster_points_D{}.csv'.format(out_dir, i))
-            expected_df_df = pd.read_csv('{}/test_files/expected_output/cluster_points_D{}.csv'.format(current_script_dir, i))
+            expected_df_df = pd.read_csv(
+                '{}/test_files/expected_output/cluster_points_D{}.csv'.format(current_script_dir, i))
 
             # test header is the same
             np.testing.assert_array_equal(cluster_dp_df.columns, expected_df_df.columns)
@@ -130,22 +141,23 @@ class IntegrationTestNormal(unt.TestCase):
             # test each cluster has same member
             for cl_id in cluster_ids:
 
-                ex_row = expected_df_df[(expected_df_df['cluster_id'] == cl_id)].sort_values(by=['x','y','z'])
-                row = cluster_dp_df[(cluster_dp_df['cluster_id'] == cl_id)].sort_values(by=['x','y','z'])
+                ex_row = expected_df_df[(expected_df_df['cluster_id'] == cl_id)].sort_values(by=['x', 'y', 'z'])
+                row = cluster_dp_df[(cluster_dp_df['cluster_id'] == cl_id)].sort_values(by=['x', 'y', 'z'])
 
                 # test we have same number of datapoints in the cluster
                 self.assertEqual(ex_row.shape[0], row.shape[0])
 
                 # test the datapoints therein are the same
                 # may not work well as it truly depends on how the rounding works for each data point
-                ex_dps = ex_row[['x','y','z']].to_numpy()
+                ex_dps = ex_row[['x', 'y', 'z']].to_numpy()
                 dps = row[['x', 'y', 'z']].to_numpy()
 
                 for ex_dp, dp in zip(ex_dps, dps):
                     np.testing.assert_array_almost_equal(ex_dp, dp, decimal=1)
 
             # test order of the data points in the output file (must be the same as the input file)
-            dataset = pd.read_csv('{}/test_files/dataset/full_dataset/synthetic_d{}.csv.gz'.format(current_script_dir, i))
+            dataset = pd.read_csv(
+                '{}/test_files/dataset/full_dataset/synthetic_d{}.csv.gz'.format(current_script_dir, i))
             cluster_dp_df = cluster_dp_df.round(2)
             data_rows = dataset[['x', 'y', 'z']].to_numpy()
             cluster_rows = cluster_dp_df[['x', 'y', 'z']].to_numpy()

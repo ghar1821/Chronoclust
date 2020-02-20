@@ -105,7 +105,7 @@ def run(data, output_directory,
 
     # If there is a program state given, we'll search for hddstream's steam and continue from it.
     # Otherwise we'll reinitialise hddstream based on the config
-    if program_state_dir is not None:
+    if os.path.exists(program_state_dir):
         logger.info("Restoring Chronoclust state saved in {}".format(program_state_dir))
         hddstream, tracker_by_association, tracker_by_lineage = restore_program_state(program_state_dir)
         hddstream.set_logger(logger)
@@ -148,15 +148,15 @@ def run(data, output_directory,
         logger.info("Setting up scaler")
         scaler = Scaler(data)
 
-    # timepoint assuming the data_file is in order of time points
     for timepoint, data_file in enumerate(data):
+        # timepoint assuming the data_file is in order of time points
 
         # This is to find out the last time point processed by hddstream in previous state.
         # If it was restored, this will skip the time points that have been processed.
         # Otherwise hddstream.last_data_timestamp will be initialise to 0 and the continue won't happen.
         # Need to have the first condition as well because otherwise
         # it'll skip the very first time point if not restoring.
-        if program_state_dir is not None and hddstream.last_data_timestamp >= timepoint:
+        if os.path.exists(program_state_dir) and hddstream.last_data_timestamp >= timepoint:
             continue
 
         # Read dataset
@@ -210,10 +210,11 @@ def run(data, output_directory,
         save_program_state(hddstream, output_directory, tracker_by_association, tracker_by_lineage)
 
     # Write out the hddstream setting
-    settings_filename = f'{output_directory}/parameters.xml'
-    with open(settings_filename, 'ab') as f:
-        # This append the config of hddstream to the result file.
-        f.write(et.tostring(config, encoding='utf8', method="xml"))
+    settings_filename = f'{output_directory}/parameters.csv'
+    with open(settings_filename, 'w') as f:
+        w = csv.DictWriter(f, config.keys())
+        w.writeheader()
+        w.writerow(config)
 
     # Log finish point
     logger.info('Chronoclust finish')
