@@ -17,40 +17,31 @@ To run the project you will require the following packages for python 3:
 6. numba
 
 ## How do I use chronoclust?
-Chronoclust is available on:
-1. Pypi: https://pypi.org/project/chronoclust/
 
-Download them or just use the stable source code here: https://github.com/ghar1821/Chronoclust/releases
+The following instructions assume you have python 3 installed. If you haven't, please install python 3.6 or 3.7.
+Visit https://www.python.org/downloads/ for instruction.
 
-Secondly, you need to have a bunch of data (doh!), and create a xml file containing the location of the data files. The files have to be in csv format compressed as gzip (extension csv.gz).
-Each file need to be associated with a time point - day 1, 2, 3 etc.
-Have a look at sample_run_script/config/input.xml for an example.
+1. Download this repo to a local folder. You can do this by clicking "clone or download" button and "Download ZIP".
+2. Unzip the downloaded repo file in step (1).
+3. Open the Terminal app.
+4. Change your active directory to the directory containing the unzipped files in step (2). To do this type ``cd `` (don't miss the space!) then drag the unzipped directory to the terminal, then press enter.
+5. Type ``python3 setup.py install`` and press enter. This shall install chronoclust into your computer.
+6. Type ``cd sample_run_script`` and press enter. This shall change your active directory to where the sample script is stored.
+7. Type ``python3 sample_run.py`` and press enter. Chronoclust will execute on a synthetic dataset.
 
-Thirdly, you need to define the config Chronoclust will be run with. Define the configs in a xml file.
-Look at sample_run_script/config/config.xml for an example, and the published article linked above for information on what parameters are there and how are they used in Chronoclust.
+It is highly recommended to learn how to use environment manager such as Miniconda (https://docs.conda.io/en/latest/miniconda.html) prior to installing Chronoclust. 
+However, if this is too much, stick with instruction above.
 
-### Running Chronoclust in Python
-After setting everything up, all you need to is just import chronoclust, and run it like below.
-```
-from chronoclust.main import main
 
-basedir = '/Users/example/Documents/workdir'
-in_file = basedir + '/input.xml'
-config_file = basedir + '/config.xml'
-main.run(config_file, in_file, basedir, basedir)
-```
-In the above script, the input and config files are stored in **/Users/example/Documents/workdir** and the clustering result will also be written into the same directory. You can store the config/input files in different directories (doesn't matter).
+### Running Chronoclust
+``sample_run.py`` file stored within ``sample_run_script`` folder shows what you need to specify in order to run Chronoclust.
+Briefly, you need the location of your data files and specify them in a list, as well as the directory where results will be stored.
+You can run Chronoclust with default parameter values, but I strongly recommend you to do this just as a trial run. 
+The default parameter values are not suitable for all kinds of dataset.
 
-If you have a _gated_ or _labelled_ data and want to see how effective Chronoclust is, you can pass a ``gating_file`` argument to the run command above and supply it with a csv file containing the centroid of each population or cluster.
-Please look at ``sample_run_script/sample_run.py`` for example.
-
-If you are unsure how to run the raw source code downloaded from github, copy the ``sample_run_script/sample_run_from_raw.py`` to the parent directory of chronoclust folder, modify the variables pointing to the xml files, then just run it.
-
-### Running Chronoclust in R
-Well, Chronoclust is not written in R but thanks to the fabulous people who write [reticulate](https://rstudio.github.io/reticulate/) package, it is now possible to run Python code in R.
-
-You still need to download Chronoclust API from Anaconda or Pypi and setup the xml files.
-Thereafter, have a look at ``sample_run_script/sample_run.R`` for example on how to run Chronoclust in R.
+``sample_run.R`` make use of reticulate to run Chronoclust in R. 
+To use this script, you need to setup Miniconda environment and install Chronoclust and all its dependencies inside it.
+See the script for more details.
 
 ## Where to start with the parameters?
 You can pretty much start with any value for any parameters, but to at least get some kind of clustering, I recommend you start with setting ``pi`` to be the dimensionality of your dataset (number of columns or markers in the dataset).

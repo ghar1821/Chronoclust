@@ -13,6 +13,14 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://https://github.com/ghar1821/Chronoclust",
     packages=setuptools.find_packages(),
+    install_requires=[
+        'numba',
+        'numpy',
+        'pandas',
+        'scipy',
+        'scikit-learn',
+        'tqdm'
+    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',

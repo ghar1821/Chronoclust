@@ -10,3 +10,4 @@ sample_run_script/.DS_Store
 build/*
 chronoclust.egg-info/*
 dist/*
+sample_run_script/.DS_Store

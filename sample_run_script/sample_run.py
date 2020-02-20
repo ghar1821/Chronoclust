@@ -15,7 +15,7 @@ config = {
     "upsilon": 6.5
 }
 
-output_directory = '../sample_run_script/output'
+output_directory = 'output'
 
 app.run(data=data_files, output_directory=output_directory, param_beta=config['beta'], param_delta=config['delta'],
         param_epsilon=config['epsilon'], param_lambda=config['lambda'], param_k=config['k'], param_mu=config['mu'],
