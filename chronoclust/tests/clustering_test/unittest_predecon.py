@@ -1,6 +1,6 @@
 import unittest as unt
 import numpy as np
-import utilities.predeconmc_functions as pred_func
+import chronoclust.utilities.predeconmc_functions as pred_func
 
 
 class PredeconTest(unt.TestCase):

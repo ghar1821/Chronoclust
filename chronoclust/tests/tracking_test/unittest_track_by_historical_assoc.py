@@ -1,9 +1,9 @@
 import unittest as unt
 import numpy as np
 
-from objects.cluster import Cluster
-from objects.microcluster import Microcluster
-import tracking.cluster_tracker as ct
+from chronoclust.objects.cluster import Cluster
+from chronoclust.objects.microcluster import Microcluster
+import chronoclust.tracking.cluster_tracker as ct
 
 
 class TrackByHistAssocTest(unt.TestCase):

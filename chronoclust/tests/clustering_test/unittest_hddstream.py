@@ -1,9 +1,8 @@
 import unittest as unt
 import logging
-import xml.etree.ElementTree as et
 import numpy as np
 
-from clustering.hddstream import HDDStream
+from chronoclust.clustering.hddstream import HDDStream
 
 
 class HelperObjTest(unt.TestCase):
@@ -18,20 +17,18 @@ class HelperObjTest(unt.TestCase):
         of each dimension is still under 0.3.
         However when the last data point is added, the last dimension is no longer preferred.
         """
-        config_xml = '<params>' \
-                   '    <config>' \
-                   '        <beta>0.5</beta>' \
-                   '        <lambda>1</lambda>' \
-                   '        <epsilon>10</epsilon>' \
-                   '        <pi>2</pi>' \
-                   '        <mu>1</mu>' \
-                   '        <delta>0.3</delta>' \
-                   '        <k>40</k>' \
-                   '        <upsilon>1</upsilon>' \
-                   '        <omicron>1</omicron>' \
-                   '    </config>' \
-                   '</params>'
-        config = et.fromstring(config_xml).find("config")
+        config = {
+            "beta": 0.5,
+            "delta": 0.3,
+            "epsilon": 10,
+            "lambda": 1,
+            "k": 40,
+            "mu": 1,
+            "pi": 2,
+            "omicron": 1,
+            "upsilon": 1
+        }
+
         logger = logging.getLogger()
         hddstream = HDDStream(config, logger)
         input_data = np.array([
@@ -62,20 +59,17 @@ class HelperObjTest(unt.TestCase):
         The idea in this test is to see when decay is applied, the variance doesn't change, and pcore will remain pcore
         instead of downgraded to outlier.
         """
-        config_xml = '<params>' \
-                   '    <config>' \
-                   '        <beta>0.001</beta>' \
-                   '        <lambda>0.5</lambda>' \
-                   '        <epsilon>10</epsilon>' \
-                   '        <pi>3</pi>' \
-                   '        <mu>1</mu>' \
-                   '        <delta>0.2</delta>' \
-                   '        <k>40</k>' \
-                   '        <upsilon>1</upsilon>' \
-                   '        <omicron>1</omicron>' \
-                   '    </config>' \
-                   '</params>'
-        config = et.fromstring(config_xml).find("config")
+        config = {
+            "beta": 0.001,
+            "delta": 0.2,
+            "epsilon": 10,
+            "lambda": 0.5,
+            "k": 40,
+            "mu": 1,
+            "pi": 3,
+            "omicron": 1,
+            "upsilon": 1
+        }
         logger = logging.getLogger()
         hddstream = HDDStream(config, logger)
         input_data = np.array([

@@ -3,11 +3,10 @@ import pandas as pd
 import os
 import shutil
 
-from main.main import run
+from chronoclust.main.main import run
 
 # note change this when refactoring filename
 current_script_dir = os.path.realpath(__file__).split('/{}'.format(os.path.basename(__file__)))[0]
-input_file = '{}/test_files/config/input_nocluster.xml'.format(current_script_dir)
 out_dir = '{}/test_files/output'.format(current_script_dir)
 
 
@@ -22,22 +21,26 @@ class IntegrationTestNoCluster(unt.TestCase):
         None
         """
 
-        # We need to write the input xml file first. Template is already given.
-        # This is because the location of the data file will vary from machine to machine, and the last thing
-        # we want to do is changing the xml file as we transfer between machine.
-        template_file = '{}/test_files/config/input_template.xml'.format(current_script_dir)
+        data = ['{codedir}/test_files/dataset/subset_dataset/synthetic_d{t}.csv.gz'.format(
+            codedir=current_script_dir,
+            t=day
+        ) for day in range(5)]
 
-        with open(template_file, 'r') as file:
-            data = file.read().format(codedir=current_script_dir, dataset_subdir='subset_dataset')
-            with open(input_file, 'w') as f:
-                f.write(data)
+        config = {
+            "beta": 1.0,
+            "delta": 0.05,
+            "epsilon": 0.03,
+            "lambda": 2,
+            "k": 4,
+            "mu": 1.0,
+            "pi": 3,
+            "omicron": 0.000000435,
+            "upsilon": 6.5
+        }
 
-        config_xml = '{}/test_files/config/config_nocluster.xml'.format(current_script_dir)
-        gating = None
-        prog = None
-
-        run(config_xml=config_xml, input_xml=input_file, output_dir=out_dir, log_dir=out_dir, gating_file=gating,
-            program_state_dir=prog, sort_output=True, normalise=True)
+        run(data=data, output_directory=out_dir, param_beta=config['beta'], param_delta=config['delta'],
+            param_epsilon=config['epsilon'], param_lambda=config['lambda'], param_k=config['k'], param_mu=config['mu'],
+            param_pi=config['pi'], param_omicron=config['omicron'], param_upsilon=config['upsilon'])
 
     @classmethod
     def tearDownClass(cls):
@@ -50,7 +53,6 @@ class IntegrationTestNoCluster(unt.TestCase):
         """
 
         shutil.rmtree('{}/test_files/output'.format(current_script_dir))
-        os.remove(input_file)
 
     def test_result(self):
 
@@ -70,18 +72,7 @@ class IntegrationTestNoCluster(unt.TestCase):
         # test that we don't have any row in the result file.
         self.assertEqual(0, result_df.shape[0])
 
-    def test_cluster_dp(self):
-        """
-        Normal run where there are no clusters.
-        The dataset is based on synthetic dataset used for original Chronoclust paper.
-        Only testing the cluster points file here.
-
-        Returns
-        -------
-        None
-
-        """
-
+        # test the cluster points
         for i in range(5):
             cluster_dp_df = pd.read_csv('{}/cluster_points_D{}.csv'.format(out_dir, i))
 

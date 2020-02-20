@@ -3,7 +3,6 @@ Scaler module to normalise data to range of 0 and 1.
 The scaler uses Scikit Learn's MinMaxScaler.
 Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.
 """
-import xml.etree.ElementTree as et
 import pandas as pd
 
 from sklearn.preprocessing import MinMaxScaler
@@ -11,31 +10,30 @@ from sklearn.preprocessing import MinMaxScaler
 
 class Scaler(object):
 
-    def __init__(self, input_data_xml=None):
+    def __init__(self, data_files=None):
         """
-        Initialise scaler object
+        Initialise scaler object. If no data_files is given, then nothing is done.
+        TODO: make it give out an error message if no data_files is given.
 
         Parameters
         ----------
-        input_data_xml : str
-            Location of the xml file containing the input file for chronoclust
+        data_files : list
+            List of str containing the filenames of the time-series data (1 data file per time point).
         """
 
         self.scaler = MinMaxScaler()
         self.input_data = []
 
-        if input_data_xml is not None:
-
-            # read the xml containing the location of input data
-            in_data = []
-            input_files = et.parse(input_data_xml).findall("file")
-            for input_file in input_files:
-                filename = input_file.find("filename").text
-                dataset = pd.read_csv(filename, compression='gzip', header=0, sep=',').values
-                in_data.extend(dataset)
+        if data_files is not None:
+            all_data_points = []
+            for filename in data_files:
+                # read in all the data files, convert to numpy list.
+                df = pd.read_csv(filename, header=0, sep=',').to_numpy()
+                # add it to the big list containing all data points.
+                all_data_points.extend(df)
 
             # fit the scaler
-            self.fit_scaler(in_data)
+            self.fit_scaler(all_data_points)
 
     def fit_scaler(self, data):
         self.scaler.fit(data)

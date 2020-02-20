@@ -6,3 +6,7 @@
 *.pyc
 sample_run_script/.DS_Store
 sample_run_script/.DS_Store
+
+build/*
+chronoclust.egg-info/*
+dist/*

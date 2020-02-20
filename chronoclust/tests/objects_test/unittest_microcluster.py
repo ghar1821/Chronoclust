@@ -2,7 +2,7 @@ import unittest as unt
 
 import numpy as np
 
-from objects.microcluster import Microcluster
+from chronoclust.objects.microcluster import Microcluster
 
 
 class HelperObjTest(unt.TestCase):
