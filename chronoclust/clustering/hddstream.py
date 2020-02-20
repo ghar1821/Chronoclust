@@ -27,26 +27,29 @@ from objects.predecon_mc import PredeconMC
 
 
 class HDDStream(object):
-    def __init__(self, config_as_xml, logger):
+    def __init__(self, config, logger):
         """
         Initialise hddstream object. All the attributes here are named based on Ntoutsi paper.
         Refer to the paper for more information.
-        Args:
-            config_as_xml: config for hddstream as xml.
-            logger: logger object
+
+        Parameters
+        ----------
+        config : dict
+            Dictionary contain values for HDDStream's config.
+        logger : logger object
+            Logger object to log HDDStream's progress.
         """
-        self.config = config_as_xml
+        self.config = config
         self.pi = None
         self.mu = None
-        self.epsilon = float(self.config.find("epsilon").text)
+        self.epsilon = float(self.config['epsilon'])
         self.epsilon_squared = self.epsilon ** 2
-        self.upsilon = float(self.config.find("upsilon").text) * self.epsilon
+        self.upsilon = float(self.config['upsilon']) * self.epsilon
         self.delta = self.calculate_pref_dim_variance_threshold()
         self.delta_squared = self.delta ** 2
-        self.beta = float(self.config.find(
-            "beta").text)
-        self.k = float(self.config.find("k").text)
-        self.lambbda = float(self.config.find("lambda").text)
+        self.beta = float(self.config['beta'])
+        self.k = float(self.config['k'])
+        self.lambbda = float(self.config['lambda'])
         self.omicron = None
 
         # The following attributes are used in the algorithm implementation.
@@ -99,7 +102,7 @@ class HDDStream(object):
         self.dataset_dimensionality = dataset_dim
 
         # Set projected_dimensionality_threshold. This will be set only once.
-        config_pi = float(config.find("pi").text)
+        config_pi = float(config['pi'])
         if config_pi <= 0:
             # if config for projected_dimensionality_threshold is set to absurd size i.e. 0 or negative,
             # the dimensionality of the dataset is going to be used instead.
@@ -111,7 +114,7 @@ class HDDStream(object):
         # Setting outlier deletion point. It's given as proportion of number of data_autoencoder points.
         # So need to set whole number.
         # It'll be based on proportion given * number of data_autoencoder points in previous day.
-        self.omicron = float(config.find("omicron").text) * self.dataset_size
+        self.omicron = float(config['omicron']) * self.dataset_size
 
         # make sure this is done only after we set outlier deletion point! This is because we want the deletion point
         # to be based on "previous day dataset size"!
@@ -137,11 +140,11 @@ class HDDStream(object):
             Float: variance threshold.
         """
 
-        variance_threshold = float(self.config.find("delta").text)
+        variance_threshold = float(self.config['delta'])
 
         # Variance threshold given must be 0 - 1. If not we need to terminate
         if variance_threshold > 1 or variance_threshold < 0:
-            sys.exit(f"Given delta ({variance_threshold}) is out of range. Must be within 0-1.")
+            sys.exit("Given delta ({}) is out of range. Must be within 0-1.".format(variance_threshold))
 
         return variance_threshold
 
@@ -156,7 +159,7 @@ class HDDStream(object):
         Returns:
             Float: density threshold value.
         """
-        return float(self.config.find("mu").text) * self.dataset_size
+        return float(self.config['mu']) * self.dataset_size
 
     def online_microcluster_maintenance(self, input_dataset, input_dataset_daystamp, reset_param=True):
         """
@@ -465,7 +468,8 @@ class HDDStream(object):
 
         for cluster in pcore_MCs:
 
-            # For offline clustering, the core status of each cluster is determined by the cluster itself rather than by PreDeCon.
+            # For offline clustering, the core status of each cluster is determined by the cluster itself
+            # rather than by PreDeCon.
             cluster_id = next(iter(cluster.id))
 
             cluster_is_core = cluster.is_core(epsilon_squared, mu, pi)
