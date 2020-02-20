@@ -3,8 +3,8 @@ from chronoclust.main import main
 ###############################################
 # Using manual specification to pass parameters
 ###############################################
-input_xml = 'sample_run_script/config/input.xml'
-config_xml = 'sample_run_script/config/config.xml'
+input_xml = 'config/input.xml'
+config_xml = 'config/config.xml'
 out = 'output'
 gating = None
 prog = None
