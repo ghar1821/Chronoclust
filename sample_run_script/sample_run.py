@@ -1,5 +1,4 @@
-from chronoclust.main import main
-
+from chronoclust import app
 
 data_directory = '../synthetic_dataset'
 data_files = ['{}/synthetic_d{}.csv.gz'.format(data_directory, x) for x in range(5)]
@@ -18,7 +17,7 @@ config = {
 
 output_directory = '../sample_run_script/output'
 
-main.run(data=data_files, output_directory=output_directory, param_beta=config['beta'], param_delta=config['delta'],
-         param_epsilon=config['epsilon'], param_lambda=config['lambda'], param_k=config['k'], param_mu=config['mu'],
-         param_pi=config['pi'], param_omicron=config['omicron'], param_upsilon=config['upsilon'])
+app.run(data=data_files, output_directory=output_directory, param_beta=config['beta'], param_delta=config['delta'],
+        param_epsilon=config['epsilon'], param_lambda=config['lambda'], param_k=config['k'], param_mu=config['mu'],
+        param_pi=config['pi'], param_omicron=config['omicron'], param_upsilon=config['upsilon'])
 

@@ -4,7 +4,7 @@ import numpy as np
 import shutil
 import os
 
-from chronoclust.main.main import run
+from chronoclust.app import run
 
 # note change this when refactoring filename
 current_script_dir = os.path.realpath(__file__).split('/{}'.format(os.path.basename(__file__)))[0]
