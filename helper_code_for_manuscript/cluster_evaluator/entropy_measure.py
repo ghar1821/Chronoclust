@@ -37,7 +37,7 @@ def get_entropy_purity(cluster_file):
     header_name_cluster_id = 'cluster_id'
 
     # We don't want Noise here. So filter out every cluster with "cluster_id" Noise
-    # The first line cast the column data_autoencoder type to string so as to allow comparison to "Noise"
+    # The first line cast the column data type to string so as to allow comparison to "Noise"
     # if cluster ids are all numeric.
     cluster_file_df[header_name_cluster_id] = cluster_file_df[header_name_cluster_id].astype('str')
     cluster_file_df = cluster_file_df.loc[cluster_file_df[header_name_cluster_id] != "Noise"]

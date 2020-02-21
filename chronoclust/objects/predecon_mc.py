@@ -32,7 +32,7 @@ class PredeconMC(Microcluster):
         # variance threshold (delta in paper [2)], k otherwise where k is just a constant.
         self.subspace_preference_vector = np.ones(len(centroid))
 
-        # A status assigned to this data_autoencoder point.
+        # A status assigned to this data point.
         # 'c' means classified, 'u' means unclassified, 'n' means noise.
         self._classification = 'u'
         self.core_status = is_core_cluster

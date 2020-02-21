@@ -130,7 +130,7 @@ class HDDStream(object):
         Calculate the variance threshold used the determine whether a dimension is preferred by a cluster.
         This variable changes with time because an input dataset for a given point in time have to be normalised to [0,
         1] based on their collective values prior to clustering due to possible experimental error. For example,
-        data for t=0 may lie in range [0,1], but for t=1, data_autoencoder may lie in range [0.1,0.88] due to an experimental error.
+        data for t=0 may lie in range [0,1], but for t=1, data may lie in range [0.1,0.88] due to an experimental error.
         In order to capture all the artifacts, we need to set different variance threshold for t=0 and t=1.
 
         Args:
@@ -309,7 +309,7 @@ class HDDStream(object):
         for index, pmc in enumerate(pcore_MCs):
 
             # In the Figure 2 paper[1] line 3-4,
-            # we want to just temporarily add data_autoencoder point to each microcluster to
+            # we want to just temporarily add data point to each microcluster to
             # see if the datapoint can fit in it by checking the microcluster's pdim. We don't want to interfere the
             # original microcluster, so we clone it and pretend to add a point it.
             temp_pmc = pmc.get_copy_with_new_point(datapoint, delta_squared, k)

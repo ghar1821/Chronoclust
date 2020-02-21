@@ -84,7 +84,7 @@ class Microcluster(object):
 
         Args:
             variance_threshold_squared (float): The squared variance threshold used to determine whether a dimension
-                can be considered preferred. For a dimension to be preferred, the variance of the data_autoencoder points along that
+                can be considered preferred. For a dimension to be preferred, the variance of the data points along that
                 dimension must be less than or equal to the the threshold.
             k_constant (int): Default constant assigned to a dimension whose variance is smaller than variance_threshold.
 
