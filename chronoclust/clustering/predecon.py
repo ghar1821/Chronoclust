@@ -7,7 +7,6 @@ The paper will be referred as paper[2].
 """
 import numpy as np
 
-# from objects.microcluster import Microcluster
 from chronoclust.objects.predecon_mc import PredeconMC
 from chronoclust.utilities import predeconmc_functions as predfunc
 

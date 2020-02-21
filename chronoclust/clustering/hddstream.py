@@ -111,10 +111,10 @@ class HDDStream(object):
             # Doesn't make sense for this to not be whole number
             self.pi = round(config_pi)
 
-        # Setting outlier deletion point. It's given as proportion of number of data_autoencoder points.
+        # Setting outlier deletion point. It's given as proportion of number of data points.
         # So need to set whole number.
-        # It'll be based on proportion given * number of data_autoencoder points in previous day.
-        self.omicron = float(config['omicron']) * self.dataset_size
+        # It'll be based on proportion given * number of data points in previous day.
+        self.omicron = config['omicron'] * self.dataset_size
 
         # make sure this is done only after we set outlier deletion point! This is because we want the deletion point
         # to be based on "previous day dataset size"!
@@ -130,7 +130,7 @@ class HDDStream(object):
         Calculate the variance threshold used the determine whether a dimension is preferred by a cluster.
         This variable changes with time because an input dataset for a given point in time have to be normalised to [0,
         1] based on their collective values prior to clustering due to possible experimental error. For example,
-        data_autoencoder for t=0 may lie in range [0,1], but for t=1, data_autoencoder may lie in range [0.1,0.88] due to an experimental error.
+        data for t=0 may lie in range [0,1], but for t=1, data_autoencoder may lie in range [0.1,0.88] due to an experimental error.
         In order to capture all the artifacts, we need to set different variance threshold for t=0 and t=1.
 
         Args:

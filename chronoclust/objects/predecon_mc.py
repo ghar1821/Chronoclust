@@ -1,6 +1,7 @@
 import numpy as np
 from chronoclust.objects.microcluster import Microcluster
 
+
 class PredeconMC(Microcluster):
 
     def __init__(self, centroid, id, is_core_cluster, cluster_CF1, cluster_CF2,

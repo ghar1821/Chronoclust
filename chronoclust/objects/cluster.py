@@ -1,5 +1,6 @@
 import copy as cp
 
+
 # -*- coding: utf-8 -*-
 class Cluster(object):
     def __init__(self, pcore_ids, cluster_centroid=None, cumulative_weight=None, preferred_dimensions=None):
