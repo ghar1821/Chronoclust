@@ -7,6 +7,39 @@ from chronoclust.clustering.hddstream import HDDStream
 
 class HelperObjTest(unt.TestCase):
 
+    def test_set_dataset_dependent_parameters(self):
+        """
+        To see if the parameters are set according to the dataset size
+        """
+        config = {
+            "beta": 0.5,
+            "delta": 0.3,
+            "epsilon": 10,
+            "lambda": 1,
+            "k": 40,
+            "mu": 0.1,
+            "pi": 0,
+            "omicron": 0.001,
+            "upsilon": 3
+        }
+        logger = logging.getLogger()
+        hddstream = HDDStream(config, logger)
+        input_data = np.random.rand(10, 2)
+        hddstream.online_microcluster_maintenance(input_data, 0)
+
+        self.assertEqual(2, hddstream.pi)
+        self.assertEqual(1, hddstream.mu)
+        self.assertEqual(0, hddstream.omicron)  # 0 as this should be based on previous day dataset, which is nothing.
+        self.assertEqual(30, hddstream.upsilon)
+
+        input_data = np.random.rand(30, 2)
+        hddstream.online_microcluster_maintenance(input_data, 1)
+
+        self.assertEqual(2, hddstream.pi)
+        self.assertEqual(3, hddstream.mu)
+        self.assertEqual(0.01, hddstream.omicron)  # this should be based on previous day dataset, which has 10 points.
+        self.assertEqual(30, hddstream.upsilon)
+
     def test_preferred_dimension(self):
         """
         The idea in this test is to see when pi is not set to maximum, if:
