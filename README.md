@@ -18,6 +18,10 @@ To run the project you will require the following packages for python 3:
 
 ## How do I use chronoclust?
 
+You can install ChronoClust using Pip (pip install Chronoclust): https://pypi.org/project/Chronoclust/
+
+OR using the setup.py script from this repo directly.
+
 The following instructions assume you have python 3 installed. If you haven't, please install python 3.6 or 3.7.
 Visit https://www.python.org/downloads/ for instruction.
 
