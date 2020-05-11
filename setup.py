@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="chronoclust",
-    version="0.2.4",
+    version="0.2.1",
     author="Givanna Putri",
     author_email="ghar1821@uni.sydney.edu.au",
     description="A clustering algorithm that will perform clustering on each of a time-series of discrete datasets, and explicitly track the evolution of clusters over time.",
