@@ -183,9 +183,9 @@ def run(data, output_directory, gating_centroid_file=None, normalise_data=True, 
             # Round the cluster weight to 1 decimal place
             rounded_weight = Decimal(str(cluster.cumulative_weight)).quantize(Decimal('1.1'), rounding=ROUND_HALF_UP)
 
-            cluster_obj = Cluster(list(cluster.id), cluster.cluster_centroids, rounded_weight,
+            cluster = Cluster(list(cluster.id), cluster.cluster_centroids, rounded_weight,
                                   cluster.preferred_dimension_vector)
-            cluster_obj.add_pcore_objects(hddstream_pcore_id_to_object_dict)
+            cluster.add_pcore_objects(hddstream_pcore_id_to_object_dict)
 
             tracker_by_lineage.add_new_child_cluster(cluster)
 
