@@ -76,7 +76,7 @@ class Cluster(object):
         self.historical_associates_pcores.update(pcore_id)
 
     def get_historical_associates_as_str(self):
-        hist_assoc = self.historical_associates
+        hist_assoc = sorted(self.historical_associates)
         return '&'.join(str(s) for s in hist_assoc)
 
     def get_historical_associates_pcore_as_str(self):
