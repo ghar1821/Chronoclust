@@ -38,14 +38,9 @@ However, if this is too much, stick with instruction above.
 
 
 ### Running Chronoclust
-``sample_run.py`` file stored within ``sample_run_script`` folder shows what you need to specify in order to run Chronoclust.
-Briefly, you need the location of your data files and specify them in a list, as well as the directory where results will be stored.
-You can run Chronoclust with default parameter values, but I strongly recommend you to do this just as a trial run. 
-The default parameter values are not suitable for all kinds of dataset.
+``sample_run.py`` file stored within ``sample_run_script`` folder shows how to run Chronoclust.
 
-``sample_run.R`` make use of reticulate to run Chronoclust in R. 
-To use this script, you need to setup Miniconda environment and install Chronoclust and all its dependencies inside it.
-See the script for more details.
+To run Chronoclust in R using reticulate, please see Spectre package: https://github.com/sydneycytometry/Spectre
 
 ## Where to start with the parameters?
 You can pretty much start with any value for any parameters, but to at least get some kind of clustering, I recommend you start with setting ``pi`` to be the dimensionality of your dataset (number of columns or markers in the dataset).
