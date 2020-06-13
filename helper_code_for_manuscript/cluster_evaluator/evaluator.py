@@ -13,7 +13,6 @@ from accuracy_measure import get_accuracy_precision_recall
 from entropy_measure import get_entropy_purity
 from tracking_evaluator import evaluate_tracking
 from unique_cluster_number_evaluator import evaluate_unique_clusters
-from noise_evaluator import calculate_noise
 
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -142,7 +141,3 @@ if synthetic_dataset:
     evaluate_unique_clusters(cluster_result_file, output_dir, normal_dataset=False)
 else:
     evaluate_unique_clusters(cluster_result_file, output_dir)
-
-# Compute noise frequency
-compute_noise_proportion()
-
