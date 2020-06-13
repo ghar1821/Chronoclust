@@ -77,6 +77,15 @@ class Microcluster(object):
         self.creation_time_in_hrs = creation_time_in_hrs
         self.points = {}
 
+        self.prev_pcore_id = None
+        self.prev_outlier_id = None
+
+    def update_prev_outlier_id(self, outlier_id):
+        self.prev_outlier_id = outlier_id
+
+    def update_prev_pcore_id(self, pcore_id):
+        self.prev_pcore_id = pcore_id
+
     def update_preferred_dimensions(self, variance_threshold_squared, k_constant):
         """
         Calculate the preferred dimensions of the cluster. When calculating the preferred dimensions, the method

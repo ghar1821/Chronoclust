@@ -60,6 +60,8 @@ class HDDStream(object):
         self.dataset_dimensionality = 0
         self.logger = logger
         self.dataset_size = 0
+        self.pcore_MC_last_id = 0
+        self.outlier_MC_last_id = 0
 
         # used for logging
         self.logger = logger
@@ -416,9 +418,18 @@ class HDDStream(object):
 
         if weight_threshold_obeyed and pdim_threshold_obeyed:
 
-            outlier_mc.id = [len(pcore_MCs)]
+            if outlier_mc.prev_pcore_id is None:
+                # never been upgraded. Need new id
+                id_to_assign = self.pcore_MC_last_id
+                self.pcore_MC_last_id += 1
+            else:
+                id_to_assign = outlier_mc.prev_pcore_id
+
+            outlier_mc.id = [id_to_assign]
             self.outlier_MC.remove(outlier_mc)
             pcore_MCs.append(outlier_mc)
+
+
 
     def _create_new_outlier_cluster(self, datapoint, creation_time, datapoint_idx):
         """
@@ -435,8 +446,9 @@ class HDDStream(object):
         """
         outlier_MCs = self.outlier_MC
 
+        id_to_assign = self.outlier_MC_last_id
         outlier_mc_id = set()
-        outlier_mc_id.add(len(outlier_MCs))
+        outlier_mc_id.add(id_to_assign)
 
         num_datapoints = len(datapoint)
         outlier_mc = Microcluster(cf1=np.zeros(num_datapoints), cf2=np.zeros(num_datapoints), id=outlier_mc_id,
@@ -444,8 +456,10 @@ class HDDStream(object):
         # TODO: should the update preferred dimension done by add new point?
         outlier_mc.add_new_point(datapoint, creation_time, datapoint_idx)
         outlier_mc.update_preferred_dimensions(self.delta_squared, self.k)
+        outlier_mc.update_prev_outlier_id(id_to_assign)
 
         outlier_MCs.append(outlier_mc)
+        self.outlier_MC_last_id += 1
 
     def offline_clustering(self, dataset_daystamp):
         """
@@ -518,7 +532,7 @@ class HDDStream(object):
             if weight_threshold_obeyed or pdim_threshold_obeyed:
 
                 # potential_cluster.id = list(range(len(self.outlier_MC), len(self.outlier_MC) + 1))
-                potential_cluster.id = [len(outlier_MCs)]
+                potential_cluster.id = [potential_cluster.prev_outlier_id]
                 pcore_MCs.remove(potential_cluster)
                 outlier_MCs.append(potential_cluster)
 
