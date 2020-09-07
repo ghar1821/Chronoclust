@@ -30,8 +30,8 @@ TRACKER_LINEAGE = 'tracking_by_lineage'
 
 
 def run(data, output_directory, gating_centroid_file=None, normalise_data=True, restore_program=False,
-        param_beta=0.2, param_delta=0.05, param_epsilon=0.03, param_lambda=2, param_k=15,
-        param_mu=0.005, param_pi=0, param_omicron=0.00001, param_upsilon=2):
+        param_beta=0.8, param_delta=0.0, param_epsilon=0.03, param_lambda=0, param_k=1,
+        param_mu=0.001, param_pi=0, param_omicron=0.0, param_upsilon=1):
     """
     Run Chronoclust.
 
